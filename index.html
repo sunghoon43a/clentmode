@@ -624,6 +624,9 @@
       <a href="support.html" class="btn-ghost" data-testid="link-support">
         <i class="bi bi-question-circle"></i> Support
       </a>
+      <a href="blog.html" class="btn-ghost" data-testid="link-support">
+        <i class="bi bi-question-circle"></i> Blog
+      </a>
       <a href="/login.html" class="btn-ghost" data-testid="link-login">
         <i class="bi bi-box-arrow-in-right"></i> Login
       </a>
@@ -662,6 +665,7 @@
     <div class="mob-label">Account</div>
     <!-- <a href="/dashboard.html" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-speedometer2"></i> Dashboard</a> -->
     <a href="support.html" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-question-circle"></i> Support</a>
+    <a href="blog.html" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-question-circle"></i> Blog</a>
     <div class="mob-cta-row">
       <a href="/login.html" class="mob-login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
       <a href="/signup.html" class="mob-signup"><i class="bi bi-person-plus"></i> Sign Up</a>
@@ -1095,6 +1099,7 @@ async function loadData(){
     if(nr.ok)allNFTs=await nr.json();
     if(ar.ok)allAuctions=await ar.json();
     if(er.ok)allExhibitions=await er.json();
+    buildNftMap();
     renderNFTs(); renderAuctions(); renderExhibitions(); renderCollections();
     buildTicker(); populateHeroFromNFTs();
   }catch(e){console.error(e);}
@@ -1283,24 +1288,63 @@ function renderSpotlight(nft){
 }
 
 /* AUCTIONS */
-function renderAuctions(){
+/* ── NFT MAP for auction image lookup ── */
+let nftMap={};
+function buildNftMap(){nftMap={};allNFTs.forEach(n=>{nftMap[n._id]=n;});}
+
+async function renderAuctions(){
   const g=document.getElementById('auctionsGrid');
   const now=Date.now();
   const act=allAuctions.filter(a=>new Date(a.startTime)<=now&&new Date(a.endTime)>now);
   if(!act.length){g.innerHTML='<div class="col-12 text-center text-muted py-5">No live auctions at the moment.</div>';return;}
+
+  /* Guarantee nftMap is populated — fetch fresh if allNFTs not yet loaded */
+  if(!Object.keys(nftMap).length){
+    try{
+      const r=await fetch('https://changes-sample.onrender.com/api/marketplace/nfts');
+      if(r.ok){allNFTs=await r.json();buildNftMap();}
+    }catch(e){}
+  }
+
   g.innerHTML=act.slice(0,4).map(a=>{
     const tl=tLeft(new Date(a.endTime));
-    const th=allNFTs.find(n=>n._id===a.nftId);
+    /* API stores NFT reference as a.nft (string id) — fall back to a.nftId just in case */
+    const nft=nftMap[a.nft]||nftMap[a.nftId];
+    const img=nft?.imageUrl||a.imageUrl||'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop';
+    const name=nft?.name||a.title||'Untitled Auction';
+    const bid=a.currentBid||a.startingPrice||'—';
+    const currency=a.currency||nft?.currency||'ETH';
     return`<div class="col-md-6 col-lg-3"><div class="auc-card">
-      ${th?`<img src="${th.imageUrl}" class="auc-thumb" alt="">`:''}
-      <div class="auc-timer"><div class="t-seg"><span class="t-val">${tl.h}</span><span class="t-lbl">Hrs</span></div><div class="t-seg"><span class="t-val">${tl.m}</span><span class="t-lbl">Min</span></div><div class="t-seg"><span class="t-val">${tl.s}</span><span class="t-lbl">Sec</span></div></div>
-      <div class="auc-name">${a.title||'Untitled Auction'}</div>
-      <div class="auc-bid">Current Bid: <strong>${a.currentBid||a.startingPrice} ETH</strong></div>
-      <button class="btn-bid" onclick="placeBid('${a._id}')" data-testid="button-bid-${a._id}"><i class="bi bi-hammer"></i> Place Bid</button>
+      <img src="${img}" class="auc-thumb" alt="${name}"
+           onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=600&auto=format&fit=crop'">
+      <div class="auc-timer">
+        <div class="t-seg"><span class="t-val" id="ah_${a._id}">${tl.h}</span><span class="t-lbl">Hrs</span></div>
+        <div class="t-seg"><span class="t-val" id="am_${a._id}">${tl.m}</span><span class="t-lbl">Min</span></div>
+        <div class="t-seg"><span class="t-val" id="as_${a._id}">${tl.s}</span><span class="t-lbl">Sec</span></div>
+      </div>
+      <div class="auc-name">${name}</div>
+      <div class="auc-bid">Current Bid: <strong>${bid} ${currency}</strong></div>
+      <button class="btn-bid" onclick="placeBid('${a._id}')" data-testid="button-bid-${a._id}">
+        <i class="bi bi-hammer"></i> Place Bid
+      </button>
     </div></div>`;
   }).join('');
+
+  /* Per-card countdown — targeted DOM updates, no full re-render flicker */
+  act.slice(0,4).forEach(a=>{
+    const end=new Date(a.endTime);
+    setInterval(()=>{
+      const t=tLeft(end);
+      const h=document.getElementById(`ah_${a._id}`);
+      const m=document.getElementById(`am_${a._id}`);
+      const s=document.getElementById(`as_${a._id}`);
+      if(h)h.textContent=t.h;
+      if(m)m.textContent=t.m;
+      if(s)s.textContent=t.s;
+    },1000);
+  });
 }
-setInterval(renderAuctions,1000);
+
 function tLeft(end){const d=Math.max(0,end-Date.now());return{h:String(Math.floor(d/3600000)).padStart(2,'0'),m:String(Math.floor((d%3600000)/60000)).padStart(2,'0'),s:String(Math.floor((d%60000)/1000)).padStart(2,'0')};}
 
 /* EXHIBITIONS */
