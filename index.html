@@ -29,75 +29,178 @@
       background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
       background-size:200px 200px;}
 
-    /* ── HEADER ── */
+    /* ════════════════════════════════════
+       HEADER — MOBILE FIXED
+    ════════════════════════════════════ */
     .hdr{
       position:sticky;top:0;z-index:900;
-      background:#ffffff;
+      background:#fff;
       border-bottom:1px solid #e2e8f0;
-      padding:1rem 0;
     }
     .hdr-in{
       max-width:1280px;margin:0 auto;
-      padding:0 1.5rem;
-      display:flex;align-items:center;justify-content:space-between;gap:2rem;
+      padding:0 1.25rem;
+      height:58px;
+      display:flex;align-items:center;gap:1rem;
     }
-    .hdr-logo{flex-shrink:0;display:flex;align-items:center;text-decoration:none;}
-    .hdr-logo img{width:150px;height:50px;object-fit:contain;}
 
-    /* search */
-    .hdr-srch{flex:1;max-width:500px;position:relative;}
+    /* Logo */
+    .hdr-logo{flex-shrink:0;display:flex;align-items:center;text-decoration:none;}
+    .hdr-logo img{width:110px;height:36px;object-fit:contain;}
+
+    /* Search — desktop */
+    .hdr-srch{flex:1;max-width:460px;position:relative;}
     .hdr-srch input{
-      width:100%;padding:.75rem 3.5rem .75rem 2.75rem;
+      width:100%;padding:.55rem 2.75rem .55rem 2.4rem;
       border:1px solid #e2e8f0;border-radius:8px;
-      font-size:.95rem;font-family:inherit;
+      font-size:.875rem;font-family:inherit;
       background:#f8fafc;color:#1e293b;
       transition:all .2s;
     }
     .hdr-srch input::placeholder{color:#94a3b8;}
-    .hdr-srch input:focus{
-      outline:none;border-color:var(--blue);
-      background:#fff;box-shadow:0 0 0 3px rgba(59,130,246,.1);
-    }
-    .srch-ic{position:absolute;left:1rem;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:.95rem;pointer-events:none;}
+    .hdr-srch input:focus{outline:none;border-color:var(--p);background:#fff;box-shadow:0 0 0 3px rgba(34,197,94,.1);}
+    .srch-ic{position:absolute;left:.825rem;top:50%;transform:translateY(-50%);color:#94a3b8;font-size:.875rem;pointer-events:none;}
     .srch-kbd{
-      position:absolute;right:.75rem;top:50%;transform:translateY(-50%);
+      position:absolute;right:.625rem;top:50%;transform:translateY(-50%);
       background:#fff;border:1px solid #e2e8f0;border-radius:4px;
-      padding:.15rem .4rem;font-size:.75rem;color:#94a3b8;font-family:monospace;
+      padding:.1rem .38rem;font-size:.7rem;color:#94a3b8;font-family:monospace;
     }
 
-    /* search dropdown — keep dark for polish */
+    /* Search dropdown */
     .srch-drop{position:absolute;top:calc(100% + .5rem);left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.15);max-height:420px;overflow-y:auto;display:none;z-index:999;}
     .srch-drop.show{display:block;}
     .srch-lbl{padding:.45rem 1rem;font-size:.7rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#94a3b8;background:#f8fafc;border-bottom:1px solid #e2e8f0;}
-    .srch-item{display:flex;align-items:center;gap:.875rem;padding:.7rem 1rem;cursor:pointer;transition:background .15s;color:#1e293b;}
+    .srch-item{display:flex;align-items:center;gap:.875rem;padding:.7rem 1rem;cursor:pointer;transition:background .15s;color:#1e293b;text-decoration:none;}
     .srch-item:hover{background:#f8fafc;}
-    .srch-item img{width:46px;height:46px;border-radius:8px;object-fit:cover;border:1px solid #e2e8f0;}
-    .srch-item h6{margin:0;font-weight:600;font-size:.9rem;color:#1e293b;}
-    .srch-item small{color:#64748b;font-size:.8rem;}
-    .srch-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--p));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1.1rem;flex-shrink:0;}
+    .srch-item img{width:44px;height:44px;border-radius:8px;object-fit:cover;border:1px solid #e2e8f0;}
+    .srch-item h6{margin:0;font-weight:600;font-size:.875rem;color:#1e293b;}
+    .srch-item small{color:#64748b;font-size:.775rem;}
+    .srch-av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--p));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:1rem;flex-shrink:0;}
 
-    /* nav actions */
-    .hdr-nav{display:flex;align-items:center;gap:1rem;}
+    /* Desktop nav */
+    .hdr-nav{display:flex;align-items:center;gap:.5rem;margin-left:auto;flex-shrink:0;}
     .btn-ghost{
-      display:inline-flex;align-items:center;gap:.5rem;
-      padding:.5rem 1rem;border:none;background:transparent;
-      color:#1e293b;font-family:inherit;font-size:.95rem;font-weight:500;
-      cursor:pointer;text-decoration:none;transition:color .2s;
+      display:inline-flex;align-items:center;gap:.4rem;
+      padding:.45rem .875rem;border:none;background:transparent;
+      color:#1e293b;font-family:inherit;font-size:.875rem;font-weight:500;
+      cursor:pointer;text-decoration:none;transition:color .2s;white-space:nowrap;
     }
     .btn-ghost:hover{color:#0f172a;}
     .btn-primary-sm{
-      display:inline-flex;align-items:center;gap:.5rem;
-      padding:.5rem 1.25rem;border-radius:8px;border:none;
+      display:inline-flex;align-items:center;gap:.4rem;
+      padding:.45rem 1.1rem;border-radius:8px;border:none;
       background:var(--p);color:#fff;
-      font-family:inherit;font-size:.95rem;font-weight:500;
-      cursor:pointer;text-decoration:none;
+      font-family:inherit;font-size:.875rem;font-weight:600;
+      cursor:pointer;text-decoration:none;white-space:nowrap;
       transition:background .2s,transform .2s,box-shadow .2s;
     }
     .btn-primary-sm:hover{background:var(--pl);color:#fff;transform:translateY(-1px);box-shadow:0 6px 20px var(--pg);}
 
-    @media(max-width:768px){
-      .hdr-in{flex-wrap:wrap;}
-      .hdr-srch{order:3;flex:0 0 100%;max-width:100%;margin-top:.5rem;}
+    /* ── Hamburger button — hidden on desktop ── */
+    .hdr-burger{
+      display:none;
+      width:36px;height:36px;border-radius:8px;
+      background:transparent;border:1px solid #e2e8f0;
+      align-items:center;justify-content:center;
+      cursor:pointer;color:#1e293b;font-size:1.05rem;
+      margin-left:auto;flex-shrink:0;
+      transition:background .15s,border-color .15s;
+    }
+    .hdr-burger:hover{background:#f1f5f9;}
+    .hdr-burger.open{background:#f1f5f9;border-color:#cbd5e1;}
+
+    /* ── Mobile search bar — below header row, hidden by default ── */
+    .mob-search-bar{
+      display:none;
+      padding:.625rem 1.25rem .625rem;
+      border-top:1px solid #e2e8f0;
+      background:#fff;
+    }
+    .mob-search-bar input{
+      width:100%;padding:.6rem 1rem .6rem 2.4rem;
+      border:1px solid #e2e8f0;border-radius:8px;
+      font-size:.9rem;font-family:inherit;
+      background:#f8fafc;color:#1e293b;
+    }
+    .mob-search-bar input:focus{outline:none;border-color:var(--p);background:#fff;}
+    .mob-srch-wrap{position:relative;}
+    .mob-srch-wrap .srch-ic{left:.75rem;}
+    .mob-srch-drop{position:absolute;top:calc(100% + .4rem);left:0;right:0;background:#fff;border:1px solid #e2e8f0;border-radius:12px;box-shadow:0 10px 40px rgba(0,0,0,.15);max-height:360px;overflow-y:auto;display:none;z-index:999;}
+    .mob-srch-drop.show{display:block;}
+
+    /* ── Mobile drawer ── */
+    .mob-drawer{
+      display:none;
+      position:fixed;top:58px;left:0;right:0;bottom:0;
+      z-index:898;
+    }
+    .mob-drawer.open{display:block;}
+    .mob-overlay{
+      position:absolute;inset:0;
+      background:rgba(0,0,0,.3);
+      animation:mobFade .2s ease;
+    }
+    @keyframes mobFade{from{opacity:0;}to{opacity:1;}}
+    .mob-panel{
+      position:absolute;top:0;right:0;bottom:0;
+      width:min(270px, 80vw);
+      background:#fff;
+      border-left:1px solid #e2e8f0;
+      padding:1rem .875rem;
+      display:flex;flex-direction:column;gap:.125rem;
+      animation:mobSlide .25s ease;
+      overflow-y:auto;
+    }
+    @keyframes mobSlide{from{transform:translateX(100%);}to{transform:translateX(0);}}
+
+    .mob-label{
+      font-size:.68rem;font-weight:700;letter-spacing:.1em;
+      text-transform:uppercase;color:#94a3b8;
+      padding:.75rem .875rem .375rem;
+      margin-top:.25rem;
+    }
+    .mob-link{
+      display:flex;align-items:center;gap:.75rem;
+      padding:.8rem .875rem;border-radius:10px;
+      color:#1e293b;font-size:.925rem;font-weight:500;
+      text-decoration:none;
+      border:none;background:transparent;cursor:pointer;
+      font-family:inherit;width:100%;text-align:left;
+      transition:background .15s;
+    }
+    .mob-link:hover{background:#f8fafc;}
+    .mob-link i{font-size:1rem;color:#64748b;width:20px;text-align:center;flex-shrink:0;}
+    .mob-divider{height:1px;background:#e2e8f0;margin:.5rem 0;}
+
+    .mob-cta-row{display:flex;flex-direction:column;gap:.5rem;margin-top:.5rem;padding-top:.5rem;border-top:1px solid #e2e8f0;}
+    .mob-login{
+      display:flex;align-items:center;justify-content:center;gap:.5rem;
+      padding:.8rem;border-radius:10px;
+      border:1px solid #e2e8f0;background:#f8fafc;
+      color:#1e293b;font-size:.925rem;font-weight:600;
+      text-decoration:none;transition:background .15s;
+    }
+    .mob-login:hover{background:#f1f5f9;}
+    .mob-signup{
+      display:flex;align-items:center;justify-content:center;gap:.5rem;
+      padding:.8rem;border-radius:10px;
+      background:var(--p);color:#fff;
+      font-size:.925rem;font-weight:700;
+      text-decoration:none;transition:background .2s;
+    }
+    .mob-signup:hover{background:var(--pl);color:#fff;}
+
+    /* ── BREAKPOINTS ── */
+    @media(max-width:860px){
+      .hdr-srch{display:none;}
+      .hdr-nav{display:none;}
+      .hdr-burger{display:flex;}
+    }
+    @media(min-width:861px){
+      .mob-drawer,.mob-search-bar,.hdr-burger{display:none !important;}
+    }
+    @media(max-width:420px){
+      .hdr-logo img{width:90px;height:30px;}
     }
 
     /* ── HERO ── */
@@ -121,7 +224,6 @@
     .orb2{width:280px;height:280px;bottom:-80px;right:48%;background:rgba(59,130,246,.09);animation-delay:-4s;}
     @keyframes floatOrb{0%,100%{transform:translateY(0) scale(1);}50%{transform:translateY(-18px) scale(1.03);}}
 
-    /* ── HERO INNER LAYOUT ── */
     .hero-inner{
       position:relative;z-index:1;
       max-width:1380px;width:100%;margin:0 auto;
@@ -133,11 +235,7 @@
       .hero-inner{grid-template-columns:1fr;padding:0 1.5rem;}
       .hero-art-col{display:none !important;}
     }
-    @media(max-width:768px){
-      .hero-art-col{display:none !important;}
-    }
 
-    /* ── HERO COPY (LEFT) ── */
     .hero-copy{padding:5rem 3rem 5rem 2rem;text-align:left;display:flex;flex-direction:column;justify-content:center;}
     @media(max-width:900px){.hero-copy{padding:4rem 0 3rem;}}
     .hero-pill{display:inline-flex;align-items:center;gap:.5rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.22);color:var(--p);font-size:.72rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:.35rem 1.1rem;border-radius:50px;margin-bottom:1.75rem;}
@@ -151,321 +249,66 @@
     .btn-hg{display:inline-flex;align-items:center;gap:.5rem;padding:.9rem 2rem;border-radius:10px;background:rgba(255,255,255,.06);color:#fff;border:1px solid rgba(255,255,255,.14);font-family:inherit;font-size:.95rem;font-weight:600;cursor:pointer;text-decoration:none;backdrop-filter:blur(8px);transition:background .25s,border-color .25s,transform .25s;}
     .btn-hg:hover{background:rgba(255,255,255,.11);border-color:rgba(255,255,255,.26);color:#fff;transform:translateY(-1px);}
 
-    /* ── HERO ART PANEL (RIGHT) — padded, frameless, blends into bg ── */
-    .hero-art-col{
-      position:relative;
-      overflow:hidden;
-      /* top/bottom breathing room + right margin away from viewport edge */
-      padding:3rem 2.5rem 3rem 0;
-      display:flex;
-      align-items:center;
-    }
-
-    /* inner container that actually clips the image */
-    .hap-inner{
-      position:relative;
-      width:100%;
-      height:100%;
-      min-height:360px;
-      border-radius:24px;
-      overflow:hidden;
-      /* frameless: no border, shadow or outline */
-    }
-
-    /* Each artwork layer — absolutely stacked, crossfade in/out */
-    .hap-slide{
-      position:absolute;inset:0;
-      opacity:0;
-      transition:opacity 2.2s ease-in-out;
-      z-index:0;
-    }
-    .hap-slide.active{
-      opacity:1;
-      z-index:1;
-    }
-    .hap-slide img,.hap-slide video{
-      width:100%;height:100%;
-      object-fit:cover;display:block;
-      animation:kenBurns 14s ease-in-out infinite alternate;
-    }
-    @keyframes kenBurns{
-      from{transform:scale(1)   translate(0,0);}
-      to  {transform:scale(1.09) translate(-1.5%,-1%);}
-    }
-
-    /* Vignette fades on all 4 sides — frameless blending */
-    .hap-inner::before{
-      content:'';position:absolute;inset:0;z-index:2;pointer-events:none;
-      background:
-        /* left bleed into bg — heaviest */
-        linear-gradient(90deg, var(--bg) 0%, rgba(8,9,13,.72) 22%, transparent 55%),
-        /* top fade */
-        linear-gradient(180deg, rgba(8,9,13,.55) 0%, transparent 30%),
-        /* bottom fade */
-        linear-gradient(0deg,   rgba(8,9,13,.65) 0%, transparent 35%),
-        /* right edge soft fade */
-        linear-gradient(270deg, rgba(8,9,13,.4) 0%, transparent 25%);
-    }
-
-    /* Info tag floating bottom-right */
-    .hap-info{
-      position:absolute;bottom:1.75rem;right:1.5rem;
-      z-index:5;
-      background:rgba(0,0,0,.52);
-      backdrop-filter:blur(18px);
-      -webkit-backdrop-filter:blur(18px);
-      border:1px solid rgba(255,255,255,.08);
-      border-radius:14px;
-      padding:.875rem 1.1rem;
-      max-width:210px;
-      opacity:0;
-      transform:translateY(10px);
-      transition:opacity .6s .4s ease, transform .6s .4s ease;
-    }
-    .hap-slide.active .hap-info{
-      opacity:1;
-      transform:translateY(0);
-    }
-    .hap-info-cat{
-      font-size:.6rem;font-weight:700;letter-spacing:.1em;
-      text-transform:uppercase;color:var(--p);margin-bottom:.3rem;
-    }
-    .hap-info-name{
-      font-family:'Syne',sans-serif;font-size:.925rem;font-weight:800;
-      color:#fff;line-height:1.25;margin-bottom:.25rem;
-    }
-    .hap-info-row{
-      display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:.5rem;
-    }
+    .hero-art-col{position:relative;overflow:hidden;padding:3rem 2.5rem 3rem 0;display:flex;align-items:center;}
+    .hap-inner{position:relative;width:100%;height:100%;min-height:360px;border-radius:24px;overflow:hidden;}
+    .hap-slide{position:absolute;inset:0;opacity:0;transition:opacity 2.2s ease-in-out;z-index:0;}
+    .hap-slide.active{opacity:1;z-index:1;}
+    .hap-slide img,.hap-slide video{width:100%;height:100%;object-fit:cover;display:block;animation:kenBurns 14s ease-in-out infinite alternate;}
+    @keyframes kenBurns{from{transform:scale(1) translate(0,0);}to{transform:scale(1.09) translate(-1.5%,-1%);}}
+    .hap-inner::before{content:'';position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,var(--bg) 0%,rgba(8,9,13,.72) 22%,transparent 55%),linear-gradient(180deg,rgba(8,9,13,.55) 0%,transparent 30%),linear-gradient(0deg,rgba(8,9,13,.65) 0%,transparent 35%),linear-gradient(270deg,rgba(8,9,13,.4) 0%,transparent 25%);}
+    .hap-info{position:absolute;bottom:1.75rem;right:1.5rem;z-index:5;background:rgba(0,0,0,.52);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:.875rem 1.1rem;max-width:210px;opacity:0;transform:translateY(10px);transition:opacity .6s .4s ease,transform .6s .4s ease;}
+    .hap-slide.active .hap-info{opacity:1;transform:translateY(0);}
+    .hap-info-cat{font-size:.6rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--p);margin-bottom:.3rem;}
+    .hap-info-name{font-family:'Syne',sans-serif;font-size:.925rem;font-weight:800;color:#fff;line-height:1.25;margin-bottom:.25rem;}
+    .hap-info-row{display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-top:.5rem;}
     .hap-info-artist{font-size:.72rem;color:rgba(255,255,255,.5);}
-    .hap-info-price{
-      font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;
-      color:var(--p);white-space:nowrap;
-    }
+    .hap-info-price{font-family:'Space Mono',monospace;font-size:.75rem;font-weight:700;color:var(--p);white-space:nowrap;}
+    .hap-progress{position:absolute;bottom:0;left:0;right:0;height:2px;z-index:6;background:rgba(255,255,255,.06);}
+    .hap-bar{height:100%;background:linear-gradient(90deg,var(--p),var(--blue));width:0%;transition:none;}
+    .hap-bar.running{transition:width var(--hap-dur,7s) linear;width:100%;}
 
-    /* Thin progress bar at very bottom of inner panel */
-    .hap-progress{
-      position:absolute;bottom:0;left:0;right:0;height:2px;z-index:6;
-      background:rgba(255,255,255,.06);
-    }
-    .hap-bar{
-      height:100%;
-      background:linear-gradient(90deg,var(--p),var(--blue));
-      width:0%;
-      transition:none;
-    }
-    .hap-bar.running{
-      transition:width var(--hap-dur,7s) linear;
-      width:100%;
-    }
-
-    /* ── CATEGORY CAROUSEL — rich full-bleed cards (same design language as fd-card) ── */
-    .cc-card{
-      flex:0 0 260px;
-      height:340px;
-      position:relative;
-      border-radius:20px;
-      overflow:hidden;
-      cursor:pointer;
-      border:none;                      /* frameless */
-      transition:transform .35s var(--ease), box-shadow .35s var(--ease);
-      flex-shrink:0;
-    }
-    .cc-card:hover{
-      transform:translateY(-8px) scale(1.015);
-      box-shadow:0 28px 64px rgba(0,0,0,.7);
-    }
-    .cc-card img{
-      width:100%;height:100%;object-fit:cover;display:block;
-      transition:transform .6s var(--ease);
-    }
+    /* ── CATEGORY CAROUSEL ── */
+    .cc-card{flex:0 0 260px;height:340px;position:relative;border-radius:20px;overflow:hidden;cursor:pointer;border:none;transition:transform .35s var(--ease),box-shadow .35s var(--ease);flex-shrink:0;}
+    .cc-card:hover{transform:translateY(-8px) scale(1.015);box-shadow:0 28px 64px rgba(0,0,0,.7);}
+    .cc-card img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease);}
     .cc-card:hover img{transform:scale(1.08);}
-
-    /* gradient overlay */
-    .cc-card::before{
-      content:'';position:absolute;inset:0;z-index:1;
-      background:linear-gradient(180deg,
-        transparent 0%,
-        rgba(6,8,16,.15) 35%,
-        rgba(6,8,16,.8) 70%,
-        rgba(6,8,16,.97) 100%
-      );
-    }
-
-    /* colour accent glow at top — unique per category */
-    .cc-card::after{
-      content:'';position:absolute;inset:0;z-index:1;
-      opacity:.45;
-      background:var(--cc-accent,transparent);
-      mix-blend-mode:color;
-      transition:opacity .3s;
-      pointer-events:none;
-    }
+    .cc-card::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 0%,rgba(6,8,16,.15) 35%,rgba(6,8,16,.8) 70%,rgba(6,8,16,.97) 100%);}
+    .cc-card::after{content:'';position:absolute;inset:0;z-index:1;opacity:.45;background:var(--cc-accent,transparent);mix-blend-mode:color;transition:opacity .3s;pointer-events:none;}
     .cc-card:hover::after{opacity:.25;}
-
-    /* category icon pill top-left */
-    .cc-icon{
-      position:absolute;top:1rem;left:1rem;z-index:3;
-      width:40px;height:40px;border-radius:12px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:1.15rem;
-      background:rgba(0,0,0,.55);backdrop-filter:blur(10px);
-      border:1px solid rgba(255,255,255,.12);
-      color:#fff;
-    }
-
-    /* item count top-right */
-    .cc-count{
-      position:absolute;top:1rem;right:1rem;z-index:3;
-      background:rgba(0,0,0,.55);backdrop-filter:blur(10px);
-      border:1px solid rgba(255,255,255,.1);
-      color:var(--tx2);font-size:.65rem;font-weight:700;
-      padding:.28rem .7rem;border-radius:50px;
-      letter-spacing:.04em;
-    }
-
-    /* bottom info */
-    .cc-info{
-      position:absolute;bottom:0;left:0;right:0;z-index:3;
-      padding:1rem 1.1rem 1.25rem;
-    }
-    .cc-cat-label{
-      font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
-      color:var(--cc-color,var(--p));margin-bottom:.35rem;
-    }
-    .cc-name{
-      font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;
-      color:#fff;margin-bottom:.2rem;line-height:1.2;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
+    .cc-icon{position:absolute;top:1rem;left:1rem;z-index:3;width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.15rem;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);color:#fff;}
+    .cc-count{position:absolute;top:1rem;right:1rem;z-index:3;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);color:var(--tx2);font-size:.65rem;font-weight:700;padding:.28rem .7rem;border-radius:50px;letter-spacing:.04em;}
+    .cc-info{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:1rem 1.1rem 1.25rem;}
+    .cc-cat-label{font-size:.62rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--cc-color,var(--p));margin-bottom:.35rem;}
+    .cc-name{font-family:'Syne',sans-serif;font-size:1rem;font-weight:800;color:#fff;margin-bottom:.2rem;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .cc-artist{font-size:.75rem;color:rgba(255,255,255,.5);margin-bottom:.75rem;}
-    .cc-footer{
-      display:flex;align-items:center;justify-content:space-between;
-      padding-top:.625rem;border-top:1px solid rgba(255,255,255,.08);
-    }
+    .cc-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.625rem;border-top:1px solid rgba(255,255,255,.08);}
     .cc-price{font-family:'Space Mono',monospace;font-size:.85rem;font-weight:700;color:var(--cc-color,var(--p));}
-    .cc-explore{
-      display:inline-flex;align-items:center;gap:.3rem;
-      background:rgba(255,255,255,.1);backdrop-filter:blur(8px);
-      border:1px solid rgba(255,255,255,.15);color:#fff;
-      padding:.38rem .875rem;border-radius:50px;
-      font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit;
-      transition:background .2s,transform .2s;
-      text-decoration:none;
-    }
+    .cc-explore{display:inline-flex;align-items:center;gap:.3rem;background:rgba(255,255,255,.1);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.15);color:#fff;padding:.38rem .875rem;border-radius:50px;font-size:.72rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s,transform .2s;text-decoration:none;}
     .cc-explore:hover{background:var(--cc-color,var(--p));color:#000;border-color:var(--cc-color,var(--p));transform:scale(1.04);}
+    @media(max-width:768px){.cc-card{flex:0 0 210px;height:280px;}}
 
-    @media(max-width:768px){
-      .cc-card{flex:0 0 210px;height:280px;}
-    }
-
-    /* ── FEATURED DROP CARDS — rich full-bleed ── */
-    .fd-card{
-      flex:0 0 300px;
-      height:380px;
-      position:relative;
-      border-radius:20px;
-      overflow:hidden;
-      cursor:pointer;
-      border:1px solid var(--b1);
-      transition:transform .35s var(--ease), box-shadow .35s var(--ease), border-color .35s;
-      flex-shrink:0;
-    }
-    .fd-card:hover{
-      transform:translateY(-8px) scale(1.015);
-      box-shadow:0 28px 64px rgba(0,0,0,.7);
-      border-color:var(--b3);
-    }
-
-    .fd-card img,.fd-card video{
-      width:100%;height:100%;object-fit:cover;display:block;
-      transition:transform .6s var(--ease);
-    }
+    /* ── FEATURED DROP CARDS ── */
+    .fd-card{flex:0 0 300px;height:380px;position:relative;border-radius:20px;overflow:hidden;cursor:pointer;border:1px solid var(--b1);transition:transform .35s var(--ease),box-shadow .35s var(--ease),border-color .35s;flex-shrink:0;}
+    .fd-card:hover{transform:translateY(-8px) scale(1.015);box-shadow:0 28px 64px rgba(0,0,0,.7);border-color:var(--b3);}
+    .fd-card img,.fd-card video{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s var(--ease);}
     .fd-card:hover img,.fd-card:hover video{transform:scale(1.07);}
-
-    /* full-height gradient */
-    .fd-card::before{
-      content:'';position:absolute;inset:0;z-index:1;
-      background:
-        linear-gradient(180deg,
-          transparent 0%,
-          rgba(6,8,16,.2) 40%,
-          rgba(6,8,16,.85) 75%,
-          rgba(6,8,16,.97) 100%
-        );
-    }
-
-    /* top-left: category badge */
-    .fd-cat{
-      position:absolute;top:1rem;left:1rem;z-index:3;
-      background:rgba(0,0,0,.6);backdrop-filter:blur(10px);
-      border:1px solid rgba(255,255,255,.1);
-      color:#fff;font-size:.62rem;font-weight:700;
-      letter-spacing:.08em;text-transform:uppercase;
-      padding:.28rem .75rem;border-radius:50px;
-    }
-
-    /* top-right: status badge (For Sale / Auction) */
-    .fd-status{
-      position:absolute;top:1rem;right:1rem;z-index:3;
-      font-size:.62rem;font-weight:800;letter-spacing:.06em;
-      text-transform:uppercase;padding:.28rem .75rem;border-radius:50px;
-    }
+    .fd-card::before{content:'';position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,transparent 0%,rgba(6,8,16,.2) 40%,rgba(6,8,16,.85) 75%,rgba(6,8,16,.97) 100%);}
+    .fd-cat{position:absolute;top:1rem;left:1rem;z-index:3;background:rgba(0,0,0,.6);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);color:#fff;font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:.28rem .75rem;border-radius:50px;}
+    .fd-status{position:absolute;top:1rem;right:1rem;z-index:3;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;padding:.28rem .75rem;border-radius:50px;}
     .fd-status.sale{background:var(--p);color:#000;}
     .fd-status.auc{background:var(--purple);color:#fff;}
-
-    /* bottom info block */
-    .fd-info{
-      position:absolute;bottom:0;left:0;right:0;z-index:3;
-      padding:1rem 1.25rem 1.375rem;
-    }
-
-    /* artist row */
-    .fd-artist-row{
-      display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;
-    }
-    .fd-av{
-      width:26px;height:26px;border-radius:50%;
-      background:linear-gradient(135deg,var(--blue),var(--p));
-      display:flex;align-items:center;justify-content:center;
-      color:#fff;font-weight:700;font-size:.68rem;flex-shrink:0;
-      border:1.5px solid rgba(255,255,255,.2);
-    }
+    .fd-info{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:1rem 1.25rem 1.375rem;}
+    .fd-artist-row{display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;}
+    .fd-av{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--p));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.68rem;flex-shrink:0;border:1.5px solid rgba(255,255,255,.2);}
     .fd-artist-name{font-size:.75rem;color:rgba(255,255,255,.6);}
-
-    .fd-name{
-      font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;
-      color:#fff;line-height:1.25;margin-bottom:.75rem;
-      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
-    }
-
-    .fd-footer{
-      display:flex;align-items:center;justify-content:space-between;
-      padding-top:.75rem;border-top:1px solid rgba(255,255,255,.1);
-    }
+    .fd-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:800;color:#fff;line-height:1.25;margin-bottom:.75rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .fd-footer{display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid rgba(255,255,255,.1);}
     .fd-price-lbl{font-size:.62rem;color:rgba(255,255,255,.45);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.15rem;}
     .fd-price-val{font-family:'Space Mono',monospace;font-size:.92rem;font-weight:700;color:var(--p);}
-
-    .fd-btn{
-      display:inline-flex;align-items:center;gap:.35rem;
-      background:rgba(255,255,255,.12);backdrop-filter:blur(8px);
-      border:1px solid rgba(255,255,255,.18);color:#fff;
-      padding:.45rem 1rem;border-radius:50px;
-      font-size:.75rem;font-weight:600;cursor:pointer;font-family:inherit;
-      transition:background .2s,transform .2s;
-      text-decoration:none;
-    }
+    .fd-btn{display:inline-flex;align-items:center;gap:.35rem;background:rgba(255,255,255,.12);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.18);color:#fff;padding:.45rem 1rem;border-radius:50px;font-size:.75rem;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s,transform .2s;text-decoration:none;}
     .fd-btn:hover{background:var(--p);color:#000;border-color:var(--p);transform:scale(1.04);}
-
-    /* likes chip */
-    .fd-likes{
-      display:flex;align-items:center;gap:.3rem;
-      font-size:.75rem;color:rgba(255,255,255,.5);
-    }
-
-    @media(max-width:768px){
-      .fd-card{flex:0 0 240px;height:320px;}
-    }
+    .fd-likes{display:flex;align-items:center;gap:.3rem;font-size:.75rem;color:rgba(255,255,255,.5);}
+    @media(max-width:768px){.fd-card{flex:0 0 240px;height:320px;}}
 
     /* ── LAYOUT ── */
     .wrap{max-width:1380px;margin:0 auto;padding:0 2rem;}
@@ -489,59 +332,23 @@
     .ci-pu{background:rgba(139,92,246,.15);color:#a78bfa;} .ci-am{background:rgba(245,158,11,.15);color:#fbbf24;}
     .cat-chip h6{margin:0;font-weight:600;font-size:.875rem;white-space:nowrap;}
 
-    /* ── CAROUSEL (FIXED) ── */
-    .car-outer{
-      position:relative;
-      /* fade edges */
-      -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 3rem,#000 calc(100% - 3rem),transparent 100%);
-      mask-image:linear-gradient(90deg,transparent 0,#000 3rem,#000 calc(100% - 3rem),transparent 100%);
-    }
-    .car-wrap{
-      overflow:hidden;
-      margin:2.25rem 0;
-      padding:0;
-    }
-    .car-track{
-      display:flex;
-      gap:1.125rem;
-      transition:transform .52s var(--ease);
-      will-change:transform;
-      padding:.5rem 3rem;    /* horizontal padding so first/last cards show fully */
-    }
-    .car-btn{
-      position:absolute;top:50%;transform:translateY(-50%);
-      width:40px;height:40px;border-radius:50%;
-      background:var(--s2);border:1px solid var(--b2);
-      color:var(--tx2);cursor:pointer;z-index:10;
-      display:flex;align-items:center;justify-content:center;
-      transition:all .2s var(--ease);font-size:.875rem;
-    }
+    /* ── CAROUSEL ── */
+    .car-outer{position:relative;-webkit-mask-image:linear-gradient(90deg,transparent 0,#000 3rem,#000 calc(100% - 3rem),transparent 100%);mask-image:linear-gradient(90deg,transparent 0,#000 3rem,#000 calc(100% - 3rem),transparent 100%);}
+    .car-wrap{overflow:hidden;margin:2.25rem 0;padding:0;}
+    .car-track{display:flex;gap:1.125rem;transition:transform .52s var(--ease);will-change:transform;padding:.5rem 3rem;}
+    .car-btn{position:absolute;top:50%;transform:translateY(-50%);width:40px;height:40px;border-radius:50%;background:var(--s2);border:1px solid var(--b2);color:var(--tx2);cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:all .2s var(--ease);font-size:.875rem;}
     .car-btn:hover{background:var(--p);color:#000;border-color:var(--p);}
     .car-prev{left:.25rem;} .car-next{right:.25rem;}
-    .c-card{
-      flex:0 0 240px;           /* wider cards */
-      background:var(--s1);border:1px solid var(--b1);
-      border-radius:16px;overflow:hidden;
-      cursor:pointer;transition:all .3s var(--ease);position:relative;
-    }
+    .c-card{flex:0 0 240px;background:var(--s1);border:1px solid var(--b1);border-radius:16px;overflow:hidden;cursor:pointer;transition:all .3s var(--ease);position:relative;}
     .c-card:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(0,0,0,.45);border-color:var(--b2);}
     .c-img{width:100%;height:160px;object-fit:cover;}
     .c-body{padding:.9rem;}
     .c-ttl{font-weight:600;font-size:.875rem;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:.2rem;}
     .c-art{font-size:.775rem;color:var(--tx2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .c-pr{font-size:.825rem;font-weight:700;color:var(--p);margin-top:.4rem;}
-    .c-cat-tag{
-      position:absolute;top:.6rem;left:.6rem;
-      background:rgba(0,0,0,.65);backdrop-filter:blur(6px);
-      color:#fff;padding:.2rem .5rem;border-radius:5px;
-      font-size:.65rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
-    }
+    .c-cat-tag{position:absolute;top:.6rem;left:.6rem;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);color:#fff;padding:.2rem .5rem;border-radius:5px;font-size:.65rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;}
     .car-empty{padding:3rem;color:var(--tx2);display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;}
-    @media(max-width:768px){
-      .c-card{flex:0 0 190px;}
-      .c-img{height:130px;}
-      .car-track{padding:.5rem 2.5rem;}
-    }
+    @media(max-width:768px){.c-card{flex:0 0 190px;}.c-img{height:130px;}.car-track{padding:.5rem 2.5rem;}}
 
     /* ── COLLECTIONS ── */
     .coll-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;}
@@ -597,7 +404,7 @@
     .at-text .at-price{color:var(--p);font-weight:700;font-family:'Space Mono',monospace;}
     @media(max-width:600px){.activity-feed{display:none;}}
 
-    /* ── SPOTLIGHT / HERO CARD ── */
+    /* ── SPOTLIGHT ── */
     .spotlight{margin-bottom:3rem;background:linear-gradient(135deg,var(--s1) 0%,var(--s2) 100%);border:1px solid var(--b2);border-radius:24px;overflow:hidden;display:grid;grid-template-columns:1.2fr 1fr;position:relative;}
     @media(max-width:768px){.spotlight{grid-template-columns:1fr;}}
     .spotlight-img-wrap{position:relative;overflow:hidden;min-height:360px;}
@@ -627,23 +434,19 @@
     .vt-btn{width:34px;height:34px;border:none;background:transparent;color:var(--tx2);border-radius:6px;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:.95rem;transition:all .2s;}
     .vt-btn.active{background:var(--s2);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.4);}
 
-    /* MASONRY NFT GRID (default) */
+    /* NFT GRID */
     .nft-grid{columns:4;column-gap:1.25rem;margin-bottom:3rem;}
     @media(max-width:1200px){.nft-grid{columns:3;}}
     @media(max-width:768px){.nft-grid{columns:2;}}
     @media(max-width:480px){.nft-grid{columns:1;}}
     .nft-card{break-inside:avoid;page-break-inside:avoid;margin-bottom:1.25rem;background:var(--s1);border:1px solid var(--b1);border-radius:16px;overflow:hidden;cursor:pointer;display:block;color:inherit;transition:all .3s var(--ease);}
     .nft-card:hover{transform:translateY(-4px);box-shadow:0 18px 50px rgba(0,0,0,.55);border-color:var(--b2);}
-
-    /* UNIFORM GRID */
     .nft-grid.grid-uniform{columns:unset;display:grid;grid-template-columns:repeat(4,1fr);gap:1.25rem;}
     @media(max-width:1200px){.nft-grid.grid-uniform{grid-template-columns:repeat(3,1fr);}}
     @media(max-width:768px){.nft-grid.grid-uniform{grid-template-columns:repeat(2,1fr);}}
     @media(max-width:480px){.nft-grid.grid-uniform{grid-template-columns:1fr;}}
     .nft-grid.grid-uniform .nft-card{margin-bottom:0;}
     .nft-grid.grid-uniform .nft-iw img,.nft-grid.grid-uniform .nft-iw video{height:220px;object-fit:cover;}
-
-    /* LIST VIEW */
     .nft-grid.grid-list{columns:unset;display:flex;flex-direction:column;gap:.75rem;}
     .nft-grid.grid-list .nft-card{display:flex;flex-direction:row;margin-bottom:0;border-radius:14px;}
     .nft-grid.grid-list .nft-iw{flex-shrink:0;width:120px;height:100px;}
@@ -651,7 +454,6 @@
     .nft-grid.grid-list .nft-bdy{flex:1;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem;padding:.875rem 1.25rem;}
     .nft-grid.grid-list .nft-ttl{font-size:1rem;white-space:normal;}
     .nft-grid.grid-list .nft-ft{border-top:none;padding-top:0;}
-
     .nft-iw{position:relative;overflow:hidden;}
     .nft-iw img,.nft-iw video{width:100%;display:block;transition:transform .4s var(--ease);}
     .nft-card:hover .nft-iw img,.nft-card:hover .nft-iw video{transform:scale(1.05);}
@@ -710,9 +512,7 @@
     .nl-form button{padding:.8rem 1.75rem;background:var(--p);color:#000;border:none;border-radius:10px;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:background .2s,transform .2s;}
     .nl-form button:hover{background:var(--pl);transform:translateY(-1px);}
 
-    /* ══════════════════════════════════════
-       FOOTER — PREMIUM
-    ══════════════════════════════════════ */
+    /* ── FOOTER ── */
     .footer{background:var(--bg2);border-top:1px solid var(--b1);}
     .ft-top{padding:4.5rem 0 3.5rem;border-bottom:1px solid var(--b1);}
     .ft-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.4fr;gap:3rem;}
@@ -789,11 +589,10 @@
 
     /* ── ANIMATIONS ── */
     @keyframes fadeUp{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
-    .hero-pill   { animation: fadeUp .5s both; }
-    .hero h1     { animation: fadeUp .6s .1s both; }
-    .hero p      { animation: fadeUp .6s .2s both; }
-    .hero-ctas   { animation: fadeUp .6s .3s both; }
-    .hero-micro  { animation: fadeUp .6s .45s both; }
+    .hero-pill{animation:fadeUp .5s both;}
+    .hero h1{animation:fadeUp .6s .1s both;}
+    .hero p{animation:fadeUp .6s .2s both;}
+    .hero-ctas{animation:fadeUp .6s .3s both;}
 
     @media(max-width:768px){
       .hero h1{font-size:2.2rem;}
@@ -812,6 +611,7 @@
       <img src="./logo.png" width="150" height="50" alt="Ethergalleries" />
     </a>
 
+    <!-- Desktop search -->
     <div class="hdr-srch">
       <i class="bi bi-search srch-ic"></i>
       <input type="text" id="searchInput" placeholder="Search collections, NFTs, creators..." />
@@ -819,6 +619,7 @@
       <div class="srch-drop" id="searchDropdown"></div>
     </div>
 
+    <!-- Desktop nav -->
     <nav class="hdr-nav">
       <a href="support.html" class="btn-ghost" data-testid="link-support">
         <i class="bi bi-question-circle"></i> Support
@@ -830,14 +631,47 @@
         <i class="bi bi-person-plus"></i> Sign Up
       </a>
     </nav>
+
+    <!-- Hamburger — mobile only -->
+    <button class="hdr-burger" id="burgerBtn" aria-label="Open menu" aria-expanded="false">
+      <i class="bi bi-list" id="burgerIcon"></i>
+    </button>
+  </div>
+
+  <!-- Mobile search bar (below header row) -->
+  <div class="mob-search-bar" id="mobSearchBar">
+    <div class="mob-srch-wrap">
+      <i class="bi bi-search srch-ic"></i>
+      <input type="text" id="mobSearchInput" placeholder="Search NFTs, creators…" />
+      <div class="mob-srch-drop" id="mobSearchDrop"></div>
+    </div>
   </div>
 </header>
 
+<!-- Mobile drawer -->
+<div class="mob-drawer" id="mobDrawer">
+  <div class="mob-overlay" id="mobOverlay"></div>
+  <nav class="mob-panel">
+    <div class="mob-label">Explore</div>
+    <a href="#marketplace" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-shop"></i> Marketplace</a>
+    <a href="category.html" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-grid-3x3-gap"></i> Categories</a>
+    <a href="#collections" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-collection"></i> Collections</a>
+    <a href="#auctions" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-hammer"></i> Live Auctions</a>
+    <a href="#exhibitions" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-building"></i> Exhibitions</a>
+    <div class="mob-divider"></div>
+    <div class="mob-label">Account</div>
+    <a href="/dashboard.html" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-speedometer2"></i> Dashboard</a>
+    <a href="support.html" class="mob-link" onclick="closeMobMenu()"><i class="bi bi-question-circle"></i> Support</a>
+    <div class="mob-cta-row">
+      <a href="/login.html" class="mob-login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+      <a href="/signup.html" class="mob-signup"><i class="bi bi-person-plus"></i> Sign Up</a>
+    </div>
+  </nav>
+</div>
+
 <!-- TICKER TAPE -->
 <div class="ticker" id="tickerTape">
-  <div class="ticker-inner" id="tickerInner">
-    <!-- populated by JS -->
-  </div>
+  <div class="ticker-inner" id="tickerInner"></div>
 </div>
 
 <!-- HERO -->
@@ -846,9 +680,7 @@
   <div class="hero-grid"></div>
   <div class="hero-orb orb1"></div>
   <div class="hero-orb orb2"></div>
-
   <div class="hero-inner">
-    <!-- LEFT: copy -->
     <div class="hero-copy">
       <div class="hero-pill"><i class="bi bi-stars"></i> The Premier Digital Art Marketplace</div>
       <h1>Discover <span class="grad">Rare Digital</span><br>Art &amp; Collectibles</h1>
@@ -858,11 +690,8 @@
         <a href="#collections" class="btn-hg"><i class="bi bi-collection"></i> View Collections</a>
       </div>
     </div>
-
-    <!-- RIGHT: crossfade ghost artworks -->
     <div class="hero-art-col" id="heroArtPanel">
       <div class="hap-inner" id="hapInner">
-        <!-- slides injected by JS -->
         <div class="hap-progress"><div class="hap-bar" id="hapBar"></div></div>
       </div>
     </div>
@@ -983,20 +812,12 @@
         <option value="10+">10+ ETH</option>
       </select>
     </div>
-
-    <!-- SPOTLIGHT -->
     <div class="spotlight" id="spotlightCard" style="display:none;">
-      <div class="spotlight-img-wrap">
-        <img id="spImg" src="" alt="" />
-        <div class="spotlight-badge"><span class="pulse"></span> Editor's Pick</div>
-      </div>
+      <div class="spotlight-img-wrap"><img id="spImg" src="" alt="" /><div class="spotlight-badge"><span class="pulse"></span> Editor's Pick</div></div>
       <div class="spotlight-body">
         <div class="spotlight-cat" id="spCat"></div>
         <div class="spotlight-title" id="spTitle"></div>
-        <div class="spotlight-artist">
-          <div class="sp-av" id="spAv"></div>
-          <span>by <strong id="spArtist"></strong></span>
-        </div>
+        <div class="spotlight-artist"><div class="sp-av" id="spAv"></div><span>by <strong id="spArtist"></strong></span></div>
         <div class="spotlight-price-row">
           <div class="sp-price-block"><label>Current Price</label><span id="spPrice"></span></div>
           <div class="sp-price-block"><label>Views</label><span class="dim" id="spViews"></span></div>
@@ -1008,7 +829,6 @@
         </div>
       </div>
     </div>
-
     <div class="nft-grid" id="nftGrid">
       <div class="empty-st"><i class="bi bi-image"></i><h4>Loading artworks…</h4></div>
     </div>
@@ -1027,14 +847,11 @@
   </div>
 </section>
 
-<!-- Exhibition BS Modal -->
+<!-- Exhibition Modal -->
 <div class="modal fade" id="exhibitionViewModal" tabindex="-1">
   <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content rounded-4">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exhibitionModalTitle">Exhibition</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
+      <div class="modal-header"><h5 class="modal-title" id="exhibitionModalTitle">Exhibition</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
       <div class="modal-body" id="exhibitionModalBody"></div>
       <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button></div>
     </div>
@@ -1077,7 +894,6 @@
   <div class="ft-top">
     <div class="wrap">
       <div class="ft-grid">
-        <!-- Brand -->
         <div>
           <div class="ft-brand"><img src="./logo.png" alt="Ethergalleries" /></div>
           <p class="ft-tagline">The premier marketplace for rare digital art, NFTs, and on-chain collectibles. Empowering creators and collectors worldwide.</p>
@@ -1088,7 +904,6 @@
             <a href="#" class="soc-btn" title="Telegram"><i class="bi bi-telegram"></i></a>
           </div>
         </div>
-        <!-- Explore -->
         <div class="ft-col">
           <h5>Explore</h5>
           <ul class="ft-links">
@@ -1099,7 +914,6 @@
             <li><a href="#exhibitions"><i class="bi bi-building"></i> Exhibitions</a></li>
           </ul>
         </div>
-        <!-- Account -->
         <div class="ft-col">
           <h5>Account</h5>
           <ul class="ft-links">
@@ -1109,7 +923,6 @@
             <li><a href="support.html"><i class="bi bi-lifepreserver"></i> Support</a></li>
           </ul>
         </div>
-        <!-- Status -->
         <div class="ft-col">
           <h5>Platform Status</h5>
           <div class="ft-status">
@@ -1143,10 +956,7 @@
 <!-- ARTWORK MODAL -->
 <div class="m-overlay" id="artworkModal">
   <div class="m-box">
-    <div class="m-hdr">
-      <h5>Artwork Details</h5>
-      <button class="m-close" onclick="closeArtworkModal()"><i class="bi bi-x"></i></button>
-    </div>
+    <div class="m-hdr"><h5>Artwork Details</h5><button class="m-close" onclick="closeArtworkModal()"><i class="bi bi-x"></i></button></div>
     <div class="m-bdy">
       <div class="aw-det">
         <div><img src="" alt="" class="aw-img" id="modalArtworkImage" /></div>
@@ -1154,21 +964,14 @@
           <h2 id="modalArtworkName"></h2>
           <div class="cr-pill"><div class="cr-av" id="modalCreatorAvatar"></div><span id="modalCreatorName"></span></div>
           <p class="text-muted" id="modalArtworkDescription" style="font-size:.9rem;line-height:1.65;margin-bottom:1rem;"></p>
-          <div style="display:flex;gap:.5rem;margin-bottom:1rem;">
-            <span class="chip" id="modalCategory"></span><span class="chip" id="modalRarity"></span>
-          </div>
+          <div style="display:flex;gap:.5rem;margin-bottom:1rem;"><span class="chip" id="modalCategory"></span><span class="chip" id="modalRarity"></span></div>
           <div class="pr-box"><div class="pr-lbl">Current Price</div><div class="pr-val" id="modalPrice"></div></div>
           <div style="display:flex;align-items:center;gap:1rem;margin-bottom:.75rem;">
-            <button class="btn btn-outline-danger rounded-pill btn-sm" id="modalLikeBtn" onclick="toggleModalLike()">
-              <i class="bi bi-heart me-1"></i><span id="modalLikeCount">0</span>
-            </button>
+            <button class="btn btn-outline-danger rounded-pill btn-sm" id="modalLikeBtn" onclick="toggleModalLike()"><i class="bi bi-heart me-1"></i><span id="modalLikeCount">0</span></button>
             <span class="text-muted" style="font-size:.85rem;"><i class="bi bi-eye me-1"></i><span id="modalViews">0</span> views</span>
           </div>
           <div class="act-btns" id="modalActionBtns"></div>
-          <div class="share-rw">
-            <input type="text" id="shareLink" readonly />
-            <button onclick="copyShareLink()"><i class="bi bi-copy"></i></button>
-          </div>
+          <div class="share-rw"><input type="text" id="shareLink" readonly /><button onclick="copyShareLink()"><i class="bi bi-copy"></i></button></div>
         </div>
       </div>
     </div>
@@ -1177,7 +980,45 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-/* TOKEN GUARD */
+/* ── MOBILE MENU ── */
+const burgerBtn = document.getElementById('burgerBtn');
+const burgerIcon = document.getElementById('burgerIcon');
+const mobDrawer = document.getElementById('mobDrawer');
+const mobOverlay = document.getElementById('mobOverlay');
+const mobSearchBar = document.getElementById('mobSearchBar');
+
+function openMobMenu() {
+  mobDrawer.classList.add('open');
+  mobSearchBar.style.display = 'block';
+  burgerIcon.className = 'bi bi-x-lg';
+  burgerBtn.classList.add('open');
+  burgerBtn.setAttribute('aria-expanded', 'true');
+  document.body.style.overflow = 'hidden';
+}
+function closeMobMenu() {
+  mobDrawer.classList.remove('open');
+  mobSearchBar.style.display = '';
+  burgerIcon.className = 'bi bi-list';
+  burgerBtn.classList.remove('open');
+  burgerBtn.setAttribute('aria-expanded', 'false');
+  document.body.style.overflow = '';
+}
+burgerBtn.addEventListener('click', () => {
+  if (mobDrawer.classList.contains('open')) closeMobMenu();
+  else openMobMenu();
+});
+mobOverlay.addEventListener('click', closeMobMenu);
+
+/* Mobile search */
+const mobSearchInput = document.getElementById('mobSearchInput');
+const mobSearchDrop = document.getElementById('mobSearchDrop');
+let mobSrchT = null;
+mobSearchInput.addEventListener('input', e => {
+  clearTimeout(mobSrchT);
+  mobSrchT = setTimeout(() => doSearchDrop(e.target.value, mobSearchDrop), 300);
+});
+
+/* ── TOKEN GUARD ── */
 function guardedNav(ev,dest){
   if(!localStorage.getItem('token')){
     ev.preventDefault();
@@ -1198,14 +1039,14 @@ document.addEventListener('click',e=>{
   }
 });
 
-/* STATE */
+/* ── STATE ── */
 let allNFTs=[],allAuctions=[],allExhibitions=[];
 let curCat='all',curTab='all',curNFT=null;
 let liked=JSON.parse(localStorage.getItem('likedNFTs')||'[]');
 let srchT=null;
 let fIdx=0,cIdx=0,fItems=[],cItems=[],fAuto=null,cAuto=null;
 const SLIDE=4200;
-let gridView='masonry'; // masonry | uniform | list
+let gridView='masonry';
 
 document.addEventListener('DOMContentLoaded',()=>{
   loadData(); setupListeners(); checkURL(); loadCarousels();
@@ -1230,23 +1071,16 @@ function setupListeners(){
   const si=document.getElementById('searchInput');
   si.addEventListener('input',e=>{clearTimeout(srchT);srchT=setTimeout(()=>doSearch(e.target.value),300);});
   si.addEventListener('focus',()=>{if(si.value.length>=2)document.getElementById('searchDropdown').classList.add('show');});
-  document.addEventListener('click',e=>{if(!e.target.closest('.hdr-srch'))document.getElementById('searchDropdown').classList.remove('show');});
-  document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();si.focus();}});
-  ['featuredDropsCarousel','categoriesCarousel'].forEach(id=>{
-    const el=document.getElementById(id);
-    if(!el)return;
-    el.addEventListener('mouseenter',()=>{clearInterval(fAuto);clearInterval(cAuto);});
-    el.addEventListener('mouseleave',()=>{startFA();startCA();});
+  document.addEventListener('click',e=>{
+    if(!e.target.closest('.hdr-srch'))document.getElementById('searchDropdown').classList.remove('show');
+    if(!e.target.closest('.mob-srch-wrap'))mobSearchDrop.classList.remove('show');
   });
-  // Also wire up outer wrappers once carousels render
-  setTimeout(setupCarouselPause, 500);
-  // View toggle
+  document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();si.focus();}});
+  setTimeout(setupCarouselPause,500);
   document.querySelectorAll('.vt-btn').forEach(btn=>{
     btn.addEventListener('click',()=>{
       document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('active'));
-      btn.classList.add('active');
-      gridView=btn.dataset.view;
-      renderNFTs();
+      btn.classList.add('active'); gridView=btn.dataset.view; renderNFTs();
     });
   });
 }
@@ -1262,8 +1096,7 @@ async function loadData(){
     if(ar.ok)allAuctions=await ar.json();
     if(er.ok)allExhibitions=await er.json();
     renderNFTs(); renderAuctions(); renderExhibitions(); renderCollections();
-    buildTicker(); // rebuild with real data
-    populateHeroFromNFTs(); // swap hero placeholders with real artworks
+    buildTicker(); populateHeroFromNFTs();
   }catch(e){console.error(e);}
 }
 
@@ -1282,44 +1115,26 @@ async function loadCarousels(){
       if(pool.length)cItems.push({...pool[Math.floor(Math.random()*pool.length)],dc:cat});
     });
     renderCC(); startCA();
-  }catch(e){
-    errTrack('featuredDropsTrack'); errTrack('categoriesArtTrack');
-  }
+  }catch(e){ errTrack('featuredDropsTrack'); errTrack('categoriesArtTrack'); }
 }
-
 function errTrack(id){const t=document.getElementById(id);if(t)t.innerHTML='<div class="car-empty">No items available</div>';}
-
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
 
 function renderFC(){
   const t=document.getElementById('featuredDropsTrack');
   if(!t||!fItems.length)return errTrack('featuredDropsTrack');
   t.innerHTML=fItems.map(n=>{
-    const statusBadge=n.status==='auction'
-      ?'<span class="fd-status auc">Auction</span>'
-      :n.status==='listed'
-        ?'<span class="fd-status sale">For Sale</span>'
-        :'';
-    const media=n.mediaType==='video'
-      ?`<video src="${n.imageUrl}" autoplay loop muted playsinline></video>`
-      :`<img src="${n.imageUrl||'/placeholder.svg'}" alt="${n.name}" loading="lazy">`;
+    const statusBadge=n.status==='auction'?'<span class="fd-status auc">Auction</span>':n.status==='listed'?'<span class="fd-status sale">For Sale</span>':'';
+    const media=n.mediaType==='video'?`<video src="${n.imageUrl}" autoplay loop muted playsinline></video>`:`<img src="${n.imageUrl||'/placeholder.svg'}" alt="${n.name}" loading="lazy">`;
     const initials=(n.creator||'?')[0].toUpperCase();
     const price=n.price?`${n.price.toFixed(2)} ${n.currency||'ETH'}`:'Unlisted';
     return`<div class="fd-card" data-testid="card-featured-${n._id}" onclick="window.location.href='artwork.html?id=${n._id}'">
-      ${media}
-      <span class="fd-cat">${n.category||'Art'}</span>
-      ${statusBadge}
+      ${media}<span class="fd-cat">${n.category||'Art'}</span>${statusBadge}
       <div class="fd-info">
-        <div class="fd-artist-row">
-          <div class="fd-av">${initials}</div>
-          <span class="fd-artist-name">by ${n.creator||'Unknown'}</span>
-        </div>
+        <div class="fd-artist-row"><div class="fd-av">${initials}</div><span class="fd-artist-name">by ${n.creator||'Unknown'}</span></div>
         <div class="fd-name">${n.name}</div>
         <div class="fd-footer">
-          <div>
-            <div class="fd-price-lbl">Price</div>
-            <div class="fd-price-val">${price}</div>
-          </div>
+          <div><div class="fd-price-lbl">Price</div><div class="fd-price-val">${price}</div></div>
           <div style="display:flex;align-items:center;gap:.75rem;">
             <div class="fd-likes"><i class="bi bi-heart-fill" style="color:#f87171;font-size:.7rem;"></i>${n.likes||0}</div>
             <a href="artwork.html?id=${n._id}" class="fd-btn" onclick="event.stopPropagation()">View <i class="bi bi-arrow-right"></i></a>
@@ -1331,15 +1146,14 @@ function renderFC(){
   setTP('featuredDropsTrack',fIdx);
 }
 
-/* category accent map */
-const CAT_ACCENTS = {
-  'Art':         { color:'#f472b6', icon:'bi-palette-fill',           accent:'rgba(236,72,153,.55)' },
-  'Gaming':      { color:'#fbbf24', icon:'bi-controller',              accent:'rgba(245,158,11,.55)' },
-  'Music':       { color:'#f87171', icon:'bi-music-note-beamed',       accent:'rgba(239,68,68,.5)'  },
-  'Photography': { color:'#2dd4bf', icon:'bi-camera-fill',             accent:'rgba(20,184,166,.5)' },
-  'Sports':      { color:'#60a5fa', icon:'bi-trophy-fill',             accent:'rgba(59,130,246,.5)' },
-  '3D Art':      { color:'#a78bfa', icon:'bi-box',                     accent:'rgba(139,92,246,.5)' },
-  'Video':       { color:'#c084fc', icon:'bi-play-circle-fill',        accent:'rgba(168,85,247,.5)' },
+const CAT_ACCENTS={
+  'Art':{color:'#f472b6',icon:'bi-palette-fill',accent:'rgba(236,72,153,.55)'},
+  'Gaming':{color:'#fbbf24',icon:'bi-controller',accent:'rgba(245,158,11,.55)'},
+  'Music':{color:'#f87171',icon:'bi-music-note-beamed',accent:'rgba(239,68,68,.5)'},
+  'Photography':{color:'#2dd4bf',icon:'bi-camera-fill',accent:'rgba(20,184,166,.5)'},
+  'Sports':{color:'#60a5fa',icon:'bi-trophy-fill',accent:'rgba(59,130,246,.5)'},
+  '3D Art':{color:'#a78bfa',icon:'bi-box',accent:'rgba(139,92,246,.5)'},
+  'Video':{color:'#c084fc',icon:'bi-play-circle-fill',accent:'rgba(168,85,247,.5)'},
 };
 
 function renderCC(){
@@ -1360,9 +1174,7 @@ function renderCC(){
         <div class="cc-artist">by ${n.creator||'Unknown'}</div>
         <div class="cc-footer">
           <span class="cc-price">${price}</span>
-          <a href="category.html?category=${encodeURIComponent(n.dc)}" class="cc-explore" onclick="event.stopPropagation()">
-            Explore <i class="bi bi-arrow-right"></i>
-          </a>
+          <a href="category.html?category=${encodeURIComponent(n.dc)}" class="cc-explore" onclick="event.stopPropagation()">Explore <i class="bi bi-arrow-right"></i></a>
         </div>
       </div>
     </div>`;
@@ -1370,45 +1182,14 @@ function renderCC(){
   setTP('categoriesArtTrack',cIdx);
 }
 
-function cardW(tid){
-  const t=document.getElementById(tid); if(!t)return 278;
-  const c=t.querySelector('.c-card,.cc-card,.fd-card'); if(!c)return 278;
-  const rect=c.getBoundingClientRect();
-  const gap=parseFloat(window.getComputedStyle(t).gap)||18;
-  return rect.width+gap;
-}
-function setTP(tid,idx){
-  const t=document.getElementById(tid);
-  if(!t)return;
-  // Offset by track's own paddingLeft so index 0 starts flush
-  const pl=parseFloat(window.getComputedStyle(t).paddingLeft)||48;
-  const offset=idx===0?0:idx*cardW(tid);
-  t.style.transform=`translateX(-${offset}px)`;
-}
-
-// Update hover pause to use new outer wrapper id
-function setupCarouselPause(){
-  ['featuredDropsCarousel','categoriesCarousel'].forEach(id=>{
-    const el=document.getElementById(id);
-    const outer=el?.closest('.car-outer');
-    if(!outer)return;
-    outer.addEventListener('mouseenter',()=>{clearInterval(fAuto);clearInterval(cAuto);});
-    outer.addEventListener('mouseleave',()=>{startFA();startCA();});
-  });
-}
-
+function cardW(tid){const t=document.getElementById(tid);if(!t)return 278;const c=t.querySelector('.c-card,.cc-card,.fd-card');if(!c)return 278;const gap=parseFloat(window.getComputedStyle(t).gap)||18;return c.getBoundingClientRect().width+gap;}
+function setTP(tid,idx){const t=document.getElementById(tid);if(!t)return;const offset=idx===0?0:idx*cardW(tid);t.style.transform=`translateX(-${offset}px)`;}
+function setupCarouselPause(){['featuredDropsCarousel','categoriesCarousel'].forEach(id=>{const el=document.getElementById(id);const outer=el?.closest('.car-outer');if(!outer)return;outer.addEventListener('mouseenter',()=>{clearInterval(fAuto);clearInterval(cAuto);});outer.addEventListener('mouseleave',()=>{startFA();startCA();});});}
 function slideFeatured(d){if(!fItems.length)return;fIdx=(fIdx+d+fItems.length)%fItems.length;setTP('featuredDropsTrack',fIdx);}
 function slideCategoryArt(d){if(!cItems.length)return;cIdx=(cIdx+d+cItems.length)%cItems.length;setTP('categoriesArtTrack',cIdx);}
 function startFA(){clearInterval(fAuto);fAuto=setInterval(()=>slideFeatured(1),SLIDE);}
 function startCA(){clearInterval(cAuto);cAuto=setInterval(()=>slideCategoryArt(1),SLIDE);}
-
-let rT; window.addEventListener('resize',()=>{
-  clearTimeout(rT);
-  rT=setTimeout(()=>{
-    setTP('featuredDropsTrack',fIdx);
-    setTP('categoriesArtTrack',cIdx);
-  },120);
-});
+let rT;window.addEventListener('resize',()=>{clearTimeout(rT);rT=setTimeout(()=>{setTP('featuredDropsTrack',fIdx);setTP('categoriesArtTrack',cIdx);},120);});
 
 /* COLLECTIONS */
 function renderCollections(){
@@ -1416,9 +1197,7 @@ function renderCollections(){
   if(!allNFTs.length)return;
   const byC={};
   allNFTs.forEach(n=>{const k=n.creator||'Unknown';if(!byC[k])byC[k]=[];byC[k].push(n);});
-  const cols=Object.entries(byC)
-    .map(([c,ns])=>({c,ns,tot:ns.length,floor:Math.min(...ns.map(n=>n.price||0))}))
-    .sort((a,b)=>b.tot-a.tot).slice(0,6);
+  const cols=Object.entries(byC).map(([c,ns])=>({c,ns,tot:ns.length,floor:Math.min(...ns.map(n=>n.price||0))})).sort((a,b)=>b.tot-a.tot).slice(0,6);
   if(!cols.length){grid.innerHTML='<div class="car-empty" style="grid-column:1/-1">No collections found</div>';return;}
   const ph='https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&auto=format&fit=crop';
   grid.innerHTML=cols.map((col,i)=>{
@@ -1426,11 +1205,7 @@ function renderCollections(){
     const chg=(Math.random()*40-5).toFixed(1);
     const up=parseFloat(chg)>=0;
     return`<div class="coll-card" onclick="window.location.href='category.html'" data-testid="coll-${i}">
-      <div class="coll-mosaic">
-        <img src="${imgs[0]?.imageUrl||ph}" alt="">
-        <img src="${imgs[1]?.imageUrl||ph}" alt="">
-        <img src="${imgs[2]?.imageUrl||ph}" alt="">
-      </div>
+      <div class="coll-mosaic"><img src="${imgs[0]?.imageUrl||ph}" alt=""><img src="${imgs[1]?.imageUrl||ph}" alt=""><img src="${imgs[2]?.imageUrl||ph}" alt=""></div>
       <span class="coll-badge">${col.tot} items</span>
       <div class="coll-body">
         <div class="coll-cr"><div class="coll-av">${col.c.charAt(0).toUpperCase()}</div><span>by ${col.c}</span></div>
@@ -1461,25 +1236,17 @@ function renderNFTs(){
     case'likes':f.sort((a,b)=>(b.likes||0)-(a.likes||0));break;
     default:f.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
   }
-
-  // Spotlight: pick most-liked listed NFT
   const sp=f.find(n=>n.status==='listed'&&n.price)||f[0];
   renderSpotlight(sp);
-
   const g=document.getElementById('nftGrid');
-  // Apply view mode class
   g.className='nft-grid'+(gridView==='uniform'?' grid-uniform':gridView==='list'?' grid-list':'');
-
   if(!f.length){g.innerHTML='<div class="empty-st"><i class="bi bi-image"></i><h4>No artworks found</h4><p>Try adjusting your filters</p></div>';return;}
-
   const rarityColor={Legendary:'#f59e0b',Epic:'#8b5cf6',Rare:'#3b82f6',Uncommon:'#14b8a6',Common:'#4a5568'};
-
   g.innerHTML=f.slice(0,20).map(nft=>{
     const lk=liked.includes(nft._id);
     const bd=nft.status==='auction'?'<span class="nft-badge auc">Auction</span>':nft.status==='listed'?'<span class="nft-badge">For Sale</span>':'';
     const md=nft.mediaType==='video'?`<video src="${nft.imageUrl}" autoplay loop muted playsinline style="width:100%;display:block;"></video>`:`<img src="${nft.imageUrl}" alt="${nft.name}" loading="lazy">`;
-    const rar=nft.rarity||'Common';
-    const rarCol=rarityColor[rar]||'#4a5568';
+    const rar=nft.rarity||'Common';const rarCol=rarityColor[rar]||'#4a5568';
     const rarPill=`<span style="position:absolute;bottom:.6rem;left:.6rem;background:rgba(0,0,0,.65);backdrop-filter:blur(6px);border:1px solid ${rarCol}44;color:${rarCol};font-size:.6rem;font-weight:700;padding:.2rem .55rem;border-radius:50px;letter-spacing:.06em;text-transform:uppercase;">${rar}</span>`;
     return`<a href="artwork.html?id=${nft._id}" class="nft-card" data-testid="card-nft-${nft._id}" style="text-decoration:none;">
       <div class="nft-iw">${md}${bd}${rarPill}
@@ -1525,12 +1292,8 @@ function renderAuctions(){
     const tl=tLeft(new Date(a.endTime));
     const th=allNFTs.find(n=>n._id===a.nftId);
     return`<div class="col-md-6 col-lg-3"><div class="auc-card">
-      ${th?`<img src="${th.imageUrl}" class="auc-thumb" alt="">` : ''}
-      <div class="auc-timer">
-        <div class="t-seg"><span class="t-val">${tl.h}</span><span class="t-lbl">Hrs</span></div>
-        <div class="t-seg"><span class="t-val">${tl.m}</span><span class="t-lbl">Min</span></div>
-        <div class="t-seg"><span class="t-val">${tl.s}</span><span class="t-lbl">Sec</span></div>
-      </div>
+      ${th?`<img src="${th.imageUrl}" class="auc-thumb" alt="">`:''}
+      <div class="auc-timer"><div class="t-seg"><span class="t-val">${tl.h}</span><span class="t-lbl">Hrs</span></div><div class="t-seg"><span class="t-val">${tl.m}</span><span class="t-lbl">Min</span></div><div class="t-seg"><span class="t-val">${tl.s}</span><span class="t-lbl">Sec</span></div></div>
       <div class="auc-name">${a.title||'Untitled Auction'}</div>
       <div class="auc-bid">Current Bid: <strong>${a.currentBid||a.startingPrice} ETH</strong></div>
       <button class="btn-bid" onclick="placeBid('${a._id}')" data-testid="button-bid-${a._id}"><i class="bi bi-hammer"></i> Place Bid</button>
@@ -1544,19 +1307,7 @@ function tLeft(end){const d=Math.max(0,end-Date.now());return{h:String(Math.floo
 function renderExhibitions(){
   const g=document.getElementById('exhibitionsGrid');
   if(!allExhibitions.length){g.innerHTML='<div class="col-12 text-center text-muted py-5">No exhibitions available.</div>';return;}
-  g.innerHTML=allExhibitions.slice(0,3).map(ex=>`
-    <div class="col-md-4"><div class="exh-card">
-      <img src="${ex.thumbnailUrl||'https://via.placeholder.com/400x200'}" alt="${ex.title}" class="exh-img">
-      <div class="exh-bdy">
-        <div class="exh-type">${ex.type||'Virtual'}</div>
-        <div class="exh-ttl">${ex.title}</div>
-        <div class="exh-desc">${ex.description||'No description'}</div>
-        <div class="exh-ft">
-          <div class="exh-dt"><i class="bi bi-calendar3"></i>${new Date(ex.startDate).toLocaleDateString()}</div>
-          <button class="btn-vexh view-exhibition-btn" data-id="${ex._id}">View</button>
-        </div>
-      </div>
-    </div></div>`).join('');
+  g.innerHTML=allExhibitions.slice(0,3).map(ex=>`<div class="col-md-4"><div class="exh-card"><img src="${ex.thumbnailUrl||'https://via.placeholder.com/400x200'}" alt="${ex.title}" class="exh-img"><div class="exh-bdy"><div class="exh-type">${ex.type||'Virtual'}</div><div class="exh-ttl">${ex.title}</div><div class="exh-desc">${ex.description||'No description'}</div><div class="exh-ft"><div class="exh-dt"><i class="bi bi-calendar3"></i>${new Date(ex.startDate).toLocaleDateString()}</div><button class="btn-vexh view-exhibition-btn" data-id="${ex._id}">View</button></div></div></div></div>`).join('');
 }
 function openExhibitionView(id){
   const ex=allExhibitions.find(e=>e._id===id);if(!ex)return;
@@ -1567,25 +1318,25 @@ function openExhibitionView(id){
 document.getElementById('exhibitionsGrid').addEventListener('click',e=>{const b=e.target.closest('.view-exhibition-btn');if(b)openExhibitionView(b.dataset.id);});
 
 /* SEARCH */
-async function doSearch(q){
-  const d=document.getElementById('searchDropdown');
-  if(q.length<2){d.classList.remove('show');return;}
+async function doSearchDrop(q, dropEl) {
+  if(q.length<2){dropEl.classList.remove('show');return;}
   try{
     const res=await fetch(`https://changes-sample.onrender.com/api/marketplace/search?q=${encodeURIComponent(q)}`);
     if(!res.ok)throw new Error();
     const results=await res.json();
-    if(!results.length){d.innerHTML='<div class="p-3 text-muted text-center" style="font-size:.875rem;">No results found</div>';}
+    if(!results.length){dropEl.innerHTML='<div class="p-3 text-center" style="color:#64748b;font-size:.875rem;">No results found</div>';}
     else{
-      const arts=[...new Set(results.map(n=>n.creator).filter(Boolean))].filter(a=>a.toLowerCase().includes(q.toLowerCase())).slice(0,3);
+      const arts=[...new Set(results.map(n=>n.creator).filter(Boolean))].filter(a=>a.toLowerCase().includes(q.toLowerCase())).slice(0,2);
       let h='';
-      if(arts.length){h+='<div class="srch-lbl">Artists</div>';h+=arts.map(a=>`<a href="artist.html?name=${encodeURIComponent(a)}" class="srch-item" style="background:rgba(59,130,246,.04);"><div class="srch-av">${a[0].toUpperCase()}</div><div><h6>${a}</h6><small>View Profile</small></div></a>`).join('');}
+      if(arts.length){h+='<div class="srch-lbl">Artists</div>';h+=arts.map(a=>`<a href="artist.html?name=${encodeURIComponent(a)}" class="srch-item"><div class="srch-av">${a[0].toUpperCase()}</div><div><h6>${a}</h6><small>View Profile</small></div></a>`).join('');}
       h+='<div class="srch-lbl">Artworks</div>';
-      h+=results.slice(0,6).map(n=>`<a href="artwork.html?id=${n._id}" class="srch-item"><img src="${n.imageUrl}" alt="${n.name}"><div><h6>${n.name}</h6><small>by ${n.creator||'Unknown'} · ${n.category}</small></div></a>`).join('');
-      d.innerHTML=h;
+      h+=results.slice(0,5).map(n=>`<a href="artwork.html?id=${n._id}" class="srch-item"><img src="${n.imageUrl}" alt="${n.name}"><div><h6>${n.name}</h6><small>by ${n.creator||'Unknown'} · ${n.category}</small></div></a>`).join('');
+      dropEl.innerHTML=h;
     }
-    d.classList.add('show');
+    dropEl.classList.add('show');
   }catch(e){console.error(e);}
 }
+async function doSearch(q){ doSearchDrop(q, document.getElementById('searchDropdown')); }
 
 /* LIKE */
 async function toggleLike(id){
@@ -1595,10 +1346,7 @@ async function toggleLike(id){
   const nft=allNFTs.find(n=>n._id===id);
   if(nft)nft.likes=lk?Math.max(0,(nft.likes||0)-1):(nft.likes||0)+1;
   renderNFTs();
-  try{
-    const token=localStorage.getItem('token');if(!token)throw new Error();
-    await fetch(`https://changes-sample.onrender.com/api/marketplace/nfts/${id}/like`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({unlike:lk})});
-  }catch(e){}
+  try{const token=localStorage.getItem('token');if(!token)throw new Error();await fetch(`https://changes-sample.onrender.com/api/marketplace/nfts/${id}/like`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`},body:JSON.stringify({unlike:lk})});}catch(e){}
 }
 
 /* MODAL */
@@ -1628,18 +1376,12 @@ function openArtworkModal(id){
   document.body.style.overflow='hidden';
 }
 function closeArtworkModal(){document.getElementById('artworkModal').style.display='none';document.body.style.overflow='';window.history.pushState({},'','/marketplace');curNFT=null;}
-function toggleModalLike(){
-  if(!curNFT)return;toggleLike(curNFT._id);
-  const lk=liked.includes(curNFT._id);
-  const lb=document.getElementById('modalLikeBtn');
-  lb.innerHTML=`<i class="bi bi-heart${lk?'-fill':''} me-1"></i><span id="modalLikeCount">${curNFT.likes||0}</span>`;
-  lb.className=`btn btn-sm rounded-pill ${lk?'btn-danger':'btn-outline-danger'}`;
-}
+function toggleModalLike(){if(!curNFT)return;toggleLike(curNFT._id);const lk=liked.includes(curNFT._id);const lb=document.getElementById('modalLikeBtn');lb.innerHTML=`<i class="bi bi-heart${lk?'-fill':''} me-1"></i><span id="modalLikeCount">${curNFT.likes||0}</span>`;lb.className=`btn btn-sm rounded-pill ${lk?'btn-danger':'btn-outline-danger'}`;}
 async function incrementViews(id){try{const t=localStorage.getItem('token');if(!t)throw new Error();await fetch(`https://changes-sample.onrender.com/api/marketplace/nfts/${id}/view`,{method:'POST'});}catch(e){}}
 async function buyNFT(id){
   const nft=allNFTs.find(n=>n._id===id);if(!nft)return;
   const sr=await fetch('https://changes-sample.onrender.com/api/auth/session');const sess=await sr.json();
-  if(!sess.authenticated){const r=await Swal.fire({icon:'warning',title:'Login Required',text:'Log in to purchase.',showCancelButton:true,confirmButtonText:'Login',cancelButtonText:'Cancel',confirmButtonColor:'#3b82f6',background:'#0e1018',color:'#eef2ff'});if(r.isConfirmed)window.location.href='/dashboard.html';return;}
+  if(!sess.authenticated){const r=await Swal.fire({icon:'warning',title:'Login Required',text:'Log in to purchase.',showCancelButton:true,confirmButtonText:'Login',confirmButtonColor:'#3b82f6',background:'#0e1018',color:'#eef2ff'});if(r.isConfirmed)window.location.href='/dashboard.html';return;}
   const c=await Swal.fire({icon:'question',title:'Confirm Purchase',text:`Buy "${nft.name}" for ${nft.price} ${nft.currency||'ETH'}?`,showCancelButton:true,confirmButtonText:'Buy Now',confirmButtonColor:'#3b82f6',background:'#0e1018',color:'#eef2ff'});
   if(!c.isConfirmed)return;
   try{
@@ -1657,140 +1399,40 @@ async function placeBid(id){
 }
 function copyShareLink(){const i=document.getElementById('shareLink');i.select();document.execCommand('copy');Swal.fire({icon:'success',title:'Copied!',text:'Link copied.',timer:1500,showConfirmButton:false,background:'#0e1018',color:'#eef2ff'});}
 function checkURL(){const id=new URLSearchParams(window.location.search).get('nft');if(id)setTimeout(()=>openArtworkModal(id),500);}
-/* ── HERO GHOST ARTWORK CROSSFADE ── */
-const HAP_DURATION = 7000; // ms each artwork stays visible
-const HAP_PLACEHOLDERS = [
-  { imageUrl:'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&auto=format&fit=crop', name:'Neon Genesis', creator:'0xArtLab', category:'Digital Art', price:'4.20 ETH' },
-  { imageUrl:'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=900&auto=format&fit=crop', name:'Chromatic Dreams', creator:'PixelSage', category:'3D Art', price:'2.75 ETH' },
-  { imageUrl:'https://images.unsplash.com/photo-1614812512223-b0c22c46c46b?w=900&auto=format&fit=crop', name:'Void Walker', creator:'MetaCanvas', category:'Photography', price:'1.98 ETH' },
-  { imageUrl:'https://images.unsplash.com/photo-1547623542-de3ff5941ddb?w=900&auto=format&fit=crop', name:'Electric Fauna', creator:'NeonWild', category:'Art', price:'6.50 ETH' },
-  { imageUrl:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop', name:'Astral Bloom', creator:'CryptoFlora', category:'Animated', price:'3.33 ETH' },
+
+/* ── HERO CAROUSEL ── */
+const HAP_DURATION=7000;
+const HAP_PLACEHOLDERS=[
+  {imageUrl:'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=900&auto=format&fit=crop',name:'Neon Genesis',creator:'0xArtLab',category:'Digital Art',price:'4.20 ETH'},
+  {imageUrl:'https://images.unsplash.com/photo-1633356122544-f134324a6cee?w=900&auto=format&fit=crop',name:'Chromatic Dreams',creator:'PixelSage',category:'3D Art',price:'2.75 ETH'},
+  {imageUrl:'https://images.unsplash.com/photo-1614812512223-b0c22c46c46b?w=900&auto=format&fit=crop',name:'Void Walker',creator:'MetaCanvas',category:'Photography',price:'1.98 ETH'},
+  {imageUrl:'https://images.unsplash.com/photo-1547623542-de3ff5941ddb?w=900&auto=format&fit=crop',name:'Electric Fauna',creator:'NeonWild',category:'Art',price:'6.50 ETH'},
+  {imageUrl:'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=900&auto=format&fit=crop',name:'Astral Bloom',creator:'CryptoFlora',category:'Animated',price:'3.33 ETH'},
 ];
-
-let hapItems = [];
-let hapActive = 0;
-let hapTimer = null;
-
-function initHeroCarousel() {
-  hapItems = HAP_PLACEHOLDERS;
-  buildHAP();
-  startHAP();
-}
-
-function populateHeroFromNFTs() {
-  if (allNFTs.length < 3) return;
-  hapItems = shuffle([...allNFTs])
-    .filter(n => n.imageUrl && n.mediaType !== 'video')
-    .slice(0, 6)
-    .map(n => ({
-      imageUrl: n.imageUrl,
-      name: n.name,
-      creator: n.creator || 'Unknown',
-      category: n.category || 'Art',
-      price: n.price ? `${n.price.toFixed(2)} ${n.currency||'ETH'}` : 'Unlisted',
-    }));
-  hapActive = 0;
-  buildHAP();
-  startHAP();
-}
-
-function buildHAP() {
-  const panel = document.getElementById('hapInner');
-  if (!panel) return;
-  // Remove old slides but keep progress bar
-  panel.querySelectorAll('.hap-slide').forEach(s => s.remove());
-
-  hapItems.forEach((item, i) => {
-    const slide = document.createElement('div');
-    slide.className = 'hap-slide' + (i === 0 ? ' active' : '');
-    slide.dataset.idx = i;
-    slide.innerHTML = `
-      <img src="${item.imageUrl}" alt="${item.name}" loading="${i===0?'eager':'lazy'}">
-      <div class="hap-info">
-        <div class="hap-info-cat">${item.category}</div>
-        <div class="hap-info-name">${item.name}</div>
-        <div class="hap-info-row">
-          <span class="hap-info-artist">by ${item.creator}</span>
-          <span class="hap-info-price">${item.price}</span>
-        </div>
-      </div>`;
-    // insert before progress bar
-    panel.insertBefore(slide, panel.querySelector('.hap-progress'));
-  });
-
-  resetHAPBar();
-}
-
-function hapNext() {
-  const slides = document.querySelectorAll('#hapInner .hap-slide');
-  if (!slides.length) return;
-  slides[hapActive].classList.remove('active');
-  hapActive = (hapActive + 1) % slides.length;
-  slides[hapActive].classList.add('active');
-  resetHAPBar();
-}
-
-function resetHAPBar() {
-  const bar = document.getElementById('hapBar');
-  if (!bar) return;
-  bar.classList.remove('running');
-  bar.style.transition = 'none';
-  bar.style.width = '0%';
-  // Force reflow then start
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      bar.style.setProperty('--hap-dur', `${HAP_DURATION/1000}s`);
-      bar.classList.add('running');
-    });
-  });
-}
-
-function startHAP() {
-  clearInterval(hapTimer);
-  hapTimer = setInterval(hapNext, HAP_DURATION);
-}
+let hapItems=[],hapActive=0,hapTimer=null;
+function initHeroCarousel(){hapItems=HAP_PLACEHOLDERS;buildHAP();startHAP();}
+function populateHeroFromNFTs(){if(allNFTs.length<3)return;hapItems=shuffle([...allNFTs]).filter(n=>n.imageUrl&&n.mediaType!=='video').slice(0,6).map(n=>({imageUrl:n.imageUrl,name:n.name,creator:n.creator||'Unknown',category:n.category||'Art',price:n.price?`${n.price.toFixed(2)} ${n.currency||'ETH'}`:'Unlisted'}));hapActive=0;buildHAP();startHAP();}
+function buildHAP(){const panel=document.getElementById('hapInner');if(!panel)return;panel.querySelectorAll('.hap-slide').forEach(s=>s.remove());hapItems.forEach((item,i)=>{const slide=document.createElement('div');slide.className='hap-slide'+(i===0?' active':'');slide.dataset.idx=i;slide.innerHTML=`<img src="${item.imageUrl}" alt="${item.name}" loading="${i===0?'eager':'lazy'}"><div class="hap-info"><div class="hap-info-cat">${item.category}</div><div class="hap-info-name">${item.name}</div><div class="hap-info-row"><span class="hap-info-artist">by ${item.creator}</span><span class="hap-info-price">${item.price}</span></div></div>`;panel.insertBefore(slide,panel.querySelector('.hap-progress'));});resetHAPBar();}
+function hapNext(){const slides=document.querySelectorAll('#hapInner .hap-slide');if(!slides.length)return;slides[hapActive].classList.remove('active');hapActive=(hapActive+1)%slides.length;slides[hapActive].classList.add('active');resetHAPBar();}
+function resetHAPBar(){const bar=document.getElementById('hapBar');if(!bar)return;bar.classList.remove('running');bar.style.transition='none';bar.style.width='0%';requestAnimationFrame(()=>{requestAnimationFrame(()=>{bar.style.setProperty('--hap-dur',`${HAP_DURATION/1000}s`);bar.classList.add('running');});});}
+function startHAP(){clearInterval(hapTimer);hapTimer=setInterval(hapNext,HAP_DURATION);}
 
 /* TICKER TAPE */
 function buildTicker(){
-  const tickers=[
-    {name:'CryptoPunk #9981',price:'12.4 ETH',change:'+8.2%',up:true},
-    {name:'Bored Ape #3312',price:'84.0 ETH',change:'+2.1%',up:true},
-    {name:'Azuki #5521',price:'15.3 ETH',change:'-1.4%',up:false},
-    {name:'Doodles #8841',price:'7.8 ETH',change:'+5.7%',up:true},
-    {name:'CloneX #1029',price:'9.2 ETH',change:'+0.9%',up:true},
-    {name:'Moonbirds #441',price:'18.6 ETH',change:'-3.2%',up:false},
-    {name:'World of Women #220',price:'4.1 ETH',change:'+12.0%',up:true},
-    {name:'Otherdeed #6634',price:'2.9 ETH',change:'+1.8%',up:true},
-  ];
-  // Use real NFTs if loaded
+  const tickers=[{name:'CryptoPunk #9981',price:'12.4 ETH',change:'+8.2%',up:true},{name:'Bored Ape #3312',price:'84.0 ETH',change:'+2.1%',up:true},{name:'Azuki #5521',price:'15.3 ETH',change:'-1.4%',up:false},{name:'Doodles #8841',price:'7.8 ETH',change:'+5.7%',up:true},{name:'CloneX #1029',price:'9.2 ETH',change:'+0.9%',up:true},{name:'Moonbirds #441',price:'18.6 ETH',change:'-3.2%',up:false},{name:'World of Women #220',price:'4.1 ETH',change:'+12.0%',up:true},{name:'Otherdeed #6634',price:'2.9 ETH',change:'+1.8%',up:true}];
   const items=allNFTs.length?allNFTs.slice(0,8).map(n=>({name:n.name,price:`${(n.price||0).toFixed(2)} ${n.currency||'ETH'}`,change:`+${(Math.random()*15).toFixed(1)}%`,up:Math.random()>.3})):tickers;
-  const html=items.map(t=>`
-    <div class="ticker-item">
-      <span class="ti-name">${t.name}</span>
-      <span>${t.price}</span>
-      <span class="${t.up?'ti-up':'ti-down'}">${t.change}</span>
-    </div>
-    <div class="ticker-dot"></div>`).join('');
-  // Duplicate for seamless loop
+  const html=items.map(t=>`<div class="ticker-item"><span class="ti-name">${t.name}</span><span>${t.price}</span><span class="${t.up?'ti-up':'ti-down'}">${t.change}</span></div><div class="ticker-dot"></div>`).join('');
   const inner=document.getElementById('tickerInner');
   if(inner){inner.innerHTML=html+html;}
 }
 
 /* LIVE ACTIVITY FEED */
-const activityMessages=[
-  (n,p)=>`<strong>${n}</strong> just purchased an artwork for <span class="at-price">${p} ETH</span>`,
-  (n,p)=>`<strong>${n}</strong> placed a bid of <span class="at-price">${p} ETH</span>`,
-  (n)=>`<strong>${n}</strong> added a new artwork to their collection`,
-  (n,p)=>`<strong>${n}</strong> listed an NFT for <span class="at-price">${p} ETH</span>`,
-  (n)=>`<strong>${n}</strong> started following a creator`,
-];
+const activityMessages=[(n,p)=>`<strong>${n}</strong> just purchased for <span class="at-price">${p} ETH</span>`,(n,p)=>`<strong>${n}</strong> placed a bid of <span class="at-price">${p} ETH</span>`,(n)=>`<strong>${n}</strong> added a new artwork`,(n,p)=>`<strong>${n}</strong> listed for <span class="at-price">${p} ETH</span>`,(n)=>`<strong>${n}</strong> started following a creator`];
 const fakeNames=['0xAlpha','CryptoSage','NFTWanderer','PixelKing','ArtCollector','0xZen','MetaVault','NeonDreamer'];
-
 function startActivityFeed(){
   let delay=3000;
   function showToast(){
-    const feed=document.getElementById('activityFeed');
-    if(!feed)return;
+    const feed=document.getElementById('activityFeed');if(!feed)return;
     const name=fakeNames[Math.floor(Math.random()*fakeNames.length)];
     const price=(Math.random()*10+0.5).toFixed(2);
     const msgFn=activityMessages[Math.floor(Math.random()*activityMessages.length)];
