@@ -627,7 +627,7 @@ function filterAndRender() {
   document.getElementById('resultCount').textContent = filtered.length;
   const categoryItem = document.querySelector(`.vx-category-item[data-category="${currentCategory}"]`);
   document.getElementById('categoryName').textContent = categoryItem ? categoryItem.textContent.trim() : 'All Categories';
-  document.getElementById('statCategory').textContent = currentCategory === 'all' ? 'All' : currentCategory;
+  // document.getElementById('statCategory').textContent = currentCategory === 'all' ? 'All' : currentCategory;
   renderNFTGrid(filtered);
 }
 
