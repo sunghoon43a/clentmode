@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ethergalleries — Discover Rare Digital Art</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@200;300;400;500;600&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--em:#00ffaa;--em2:#0088ff;--em3:#aa44ff;--bg:#020408;--s1:rgba(4,10,20,.95);--tx:#e8f4ff;--tx2:#5a7a9a;--tx3:#1a2a3a;--glow:0 0 40px rgba(0,255,170,.25)}
+html,body{width:100%;height:100%;background:var(--bg);color:var(--tx);font-family:'Outfit',sans-serif;overflow-x:hidden;cursor:none}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:#0a1a2a}
+/* CURSOR */
+#cursor{position:fixed;z-index:9999;pointer-events:none;top:0;left:0}
+#cur-dot{width:7px;height:7px;background:var(--em);border-radius:50%;position:absolute;transform:translate(-50%,-50%)}
+#cur-ring{width:34px;height:34px;border:1px solid rgba(0,255,170,.45);border-radius:50%;position:absolute;transform:translate(-50%,-50%);transition:width .25s,height .25s}
+body.hov #cur-ring{width:52px;height:52px;border-color:var(--em)}
+/* CANVAS */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+/* LOADER */
+#loader{position:fixed;inset:0;z-index:8000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2rem;transition:opacity .9s,visibility .9s}
+#loader.gone{opacity:0;visibility:hidden;pointer-events:none}
+.ld-logo{font-family:'Bebas Neue',sans-serif;font-size:3.5rem;letter-spacing:.2em;color:var(--em);text-shadow:0 0 60px rgba(0,255,170,.5)}
+.ld-bar-wrap{width:260px;height:1px;background:rgba(255,255,255,.05)}
+.ld-bar{height:100%;background:linear-gradient(90deg,var(--em2),var(--em),var(--em3));width:0%;box-shadow:0 0 10px var(--em);transition:width .05s}
+.ld-txt{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--tx2);font-family:'Space Mono',monospace}
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.25rem 3rem;background:linear-gradient(180deg,rgba(2,6,12,.96) 0%,transparent 100%)}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:1.5rem;letter-spacing:.18em;color:#fff}
+.nav-logo em{color:var(--em);font-style:normal}
+.nav-links{display:flex;gap:2.25rem;align-items:center}
+.nav-links a{color:var(--tx2);font-size:.75rem;font-weight:500;letter-spacing:.1em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:color .2s;position:relative}
+.nav-links a::after{content:'';position:absolute;bottom:-3px;left:0;right:0;height:1px;background:var(--em);transform:scaleX(0);transition:transform .2s;transform-origin:left}
+.nav-links a:hover{color:#fff}.nav-links a:hover::after{transform:scaleX(1)}
+.nav-cta{padding:.5rem 1.4rem;border:1px solid var(--em);color:var(--em);font-size:.72rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;transition:all .22s;background:transparent;font-family:'Outfit',sans-serif;cursor:pointer}
+.nav-cta:hover{background:var(--em);color:#000;box-shadow:var(--glow)}
+@media(max-width:768px){nav{padding:1rem 1.5rem}.hl{display:none}}
+/* TICKER */
+.ticker{position:relative;z-index:3;overflow:hidden;padding:.55rem 0;background:rgba(0,255,170,.03);border-top:1px solid rgba(0,255,170,.08);border-bottom:1px solid rgba(0,255,170,.08);margin-top:72px}
+.ticker::before,.ticker::after{content:'';position:absolute;top:0;bottom:0;width:90px;z-index:2;pointer-events:none}
+.ticker::before{left:0;background:linear-gradient(90deg,var(--bg),transparent)}
+.ticker::after{right:0;background:linear-gradient(-90deg,var(--bg),transparent)}
+.t-track{display:flex;gap:3.5rem;animation:tscroll 32s linear infinite;width:max-content;align-items:center}
+.t-track:hover{animation-play-state:paused}
+@keyframes tscroll{to{transform:translateX(-50%)}}
+.ti{display:flex;align-items:center;gap:.7rem;white-space:nowrap;font-size:.73rem;color:var(--tx2);font-family:'Space Mono',monospace}
+.ti-n{color:var(--tx)}.ti-u{color:var(--em)}.ti-d{color:#ff4466}
+.ti-sep{width:1px;height:12px;background:rgba(255,255,255,.07)}
+/* HERO */
+#hero{position:relative;z-index:1;min-height:100vh;display:flex;align-items:flex-end;padding:0 3rem 8vh}
+.hero-copy{max-width:700px}
+.hero-ey{display:inline-flex;align-items:center;gap:.75rem;font-size:.65rem;letter-spacing:.2em;text-transform:uppercase;color:var(--em);font-family:'Space Mono',monospace;margin-bottom:1.5rem;animation:rUp .8s .2s both}
+.hero-ey::before{content:'';width:28px;height:1px;background:var(--em)}
+h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(5rem,11vw,11rem);line-height:.9;letter-spacing:.02em;color:#fff;margin-bottom:1.5rem;animation:rUp .8s .4s both}
+h1 .hl2{display:block;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.3)}
+h1 .hl2 em{color:var(--em);-webkit-text-stroke:0;font-style:normal;text-shadow:0 0 100px rgba(0,255,170,.4)}
+.hero-p{font-size:1rem;font-weight:300;color:var(--tx2);line-height:1.8;max-width:440px;margin-bottom:2.5rem;animation:rUp .8s .6s both}
+.hero-btns{display:flex;gap:1.25rem;flex-wrap:wrap;animation:rUp .8s .8s both}
+.btn-em{padding:.9rem 2.5rem;background:var(--em);color:#000;font-weight:700;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;border:none;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-block}
+.btn-em:hover{box-shadow:0 0 70px rgba(0,255,170,.5);transform:translateY(-2px)}
+.btn-ol{padding:.9rem 2.5rem;background:transparent;color:#fff;font-weight:400;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;border:1px solid rgba(255,255,255,.18);cursor:pointer;transition:all .25s;text-decoration:none;display:inline-block}
+.btn-ol:hover{border-color:rgba(255,255,255,.55);background:rgba(255,255,255,.04)}
+.hero-mets{position:absolute;right:3rem;bottom:8vh;display:flex;flex-direction:column;gap:2rem;animation:rUp .8s 1s both}
+.hm{text-align:right}
+.hm-v{font-family:'Space Mono',monospace;font-size:1.5rem;font-weight:700;color:var(--em);line-height:1}
+.hm-l{font-size:.6rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tx2);margin-top:.25rem}
+@media(max-width:768px){#hero{padding:0 1.5rem 6vh}.hero-mets{display:none}}
+@keyframes rUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+/* SECTION */
+.sec{position:relative;z-index:2;padding:8rem 3rem}
+.sec-alt{background:rgba(0,4,10,.65);backdrop-filter:blur(50px);border-top:1px solid rgba(0,255,170,.04);border-bottom:1px solid rgba(0,255,170,.04)}
+.sec-in{max-width:1360px;margin:0 auto}
+.sec-ey{font-size:.63rem;letter-spacing:.2em;text-transform:uppercase;color:var(--em);font-family:'Space Mono',monospace;display:flex;align-items:center;gap:.75rem;margin-bottom:.875rem}
+.sec-ey::before{content:'';width:18px;height:1px;background:var(--em)}
+.sec-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(3rem,6vw,6.5rem);letter-spacing:.03em;color:#fff;line-height:.93;margin-bottom:1.25rem}
+.sec-h .dm{color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.18)}
+@media(max-width:768px){.sec{padding:5rem 1.5rem}}
+/* GALLERY SCROLL */
+.gal-scroll{overflow-x:auto;overflow-y:visible;padding:0 0 2rem;-ms-overflow-style:none;scrollbar-width:none}
+.gal-scroll::-webkit-scrollbar{display:none}
+.gal-track{display:flex;gap:1.375rem;padding:1.5rem 0;width:max-content}
+/* NFT CARD */
+.nft-card{flex-shrink:0;width:290px;background:rgba(4,10,20,.92);border:1px solid rgba(0,255,170,.07);position:relative;overflow:hidden;cursor:pointer;transition:border-color .4s,transform .4s,box-shadow .4s}
+.nft-card:hover{border-color:rgba(0,255,170,.45);transform:translateY(-14px) scale(1.02);box-shadow:0 50px 90px rgba(0,0,0,.8),0 0 50px rgba(0,255,170,.1),inset 0 0 50px rgba(0,255,170,.02)}
+.nft-card::before{content:'';position:absolute;inset:0;z-index:2;background:linear-gradient(180deg,transparent 38%,rgba(2,6,12,.97) 100%);pointer-events:none}
+.nft-img{width:100%;height:270px;object-fit:cover;display:block;transition:transform .7s}
+.nft-card:hover .nft-img{transform:scale(1.07)}
+.nft-scan{position:absolute;top:0;left:0;right:0;height:2px;z-index:4;background:linear-gradient(90deg,transparent,var(--em),transparent);opacity:0}
+.nft-card:hover .nft-scan{opacity:1;animation:scanLine 1.4s linear infinite}
+@keyframes scanLine{from{transform:translateY(-2px)}to{transform:translateY(272px)}}
+.nft-rar{position:absolute;top:.875rem;left:.875rem;z-index:5;font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;padding:.22rem .65rem;font-family:'Space Mono',monospace;border:1px solid}
+.r-leg{border-color:#f59e0b;color:#f59e0b;background:rgba(245,158,11,.08)}
+.r-ep{border-color:#8b5cf6;color:#8b5cf6;background:rgba(139,92,246,.08)}
+.r-ra{border-color:#3b82f6;color:#3b82f6;background:rgba(59,130,246,.08)}
+.r-un{border-color:#14b8a6;color:#14b8a6;background:rgba(20,184,166,.08)}
+.r-co{border-color:#2a3a4a;color:var(--tx2);background:transparent}
+.nft-body{position:absolute;bottom:0;left:0;right:0;z-index:3;padding:1.125rem 1.25rem 1.5rem}
+.nft-cat{font-size:.57rem;letter-spacing:.18em;text-transform:uppercase;color:var(--em);font-family:'Space Mono',monospace;margin-bottom:.55rem}
+.nft-name{font-family:'Bebas Neue',sans-serif;font-size:1.35rem;letter-spacing:.05em;color:#fff;line-height:1;margin-bottom:.35rem}
+.nft-cr{font-size:.7rem;color:var(--tx2);margin-bottom:.875rem;font-weight:300}
+.nft-ft{display:flex;align-items:center;justify-content:space-between}
+.nft-pr{font-family:'Space Mono',monospace;font-size:.85rem;font-weight:700;color:var(--em)}
+.nft-pr small{display:block;font-size:.55rem;font-weight:400;color:var(--tx2);margin-top:.12rem}
+.nbadge{font-size:.56rem;letter-spacing:.1em;text-transform:uppercase;padding:.25rem .7rem;font-family:'Space Mono',monospace}
+.b-sale{background:var(--em);color:#000}.b-auc{background:var(--em3);color:#fff}
+/* FILTER */
+.frow{display:flex;gap:.625rem;flex-wrap:wrap;margin-bottom:2rem}
+.fchip{padding:.48rem 1.1rem;border:1px solid rgba(255,255,255,.07);color:var(--tx2);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;background:transparent;font-family:'Outfit',sans-serif}
+.fchip:hover{border-color:rgba(0,255,170,.3);color:var(--em)}
+.fchip.active{border-color:var(--em);color:var(--em);background:rgba(0,255,170,.05)}
+.fsel{padding:.48rem 1.1rem;background:rgba(4,10,20,.9);border:1px solid rgba(255,255,255,.07);color:var(--tx2);font-family:'Outfit',sans-serif;font-size:.72rem;cursor:pointer;letter-spacing:.06em;text-transform:uppercase}
+.fsel:focus{outline:none;border-color:rgba(0,255,170,.3)}
+/* SPOTLIGHT */
+.spotlight{display:grid;grid-template-columns:1fr 1fr;border:1px solid rgba(0,255,170,.1);overflow:hidden;margin-bottom:3.5rem;position:relative}
+.spotlight::before{content:'FEATURED DROP';position:absolute;top:1.25rem;left:1.25rem;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--em);font-family:'Space Mono',monospace;z-index:10;background:rgba(2,6,12,.88);padding:.3rem .75rem;border:1px solid rgba(0,255,170,.2)}
+.sp-img{width:100%;height:460px;object-fit:cover;display:block;transition:transform .8s}
+.spotlight:hover .sp-img{transform:scale(1.03)}
+.sp-body{background:rgba(4,10,20,.98);padding:3rem 2.5rem;display:flex;flex-direction:column;justify-content:center;border-left:1px solid rgba(0,255,170,.05)}
+.sp-cat{font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--em);font-family:'Space Mono',monospace;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
+.sp-cat::before{content:'';width:18px;height:1px;background:var(--em)}
+.sp-title{font-family:'Bebas Neue',sans-serif;font-size:2.8rem;letter-spacing:.04em;color:#fff;line-height:.92;margin-bottom:1rem}
+.sp-art{display:flex;align-items:center;gap:.75rem;margin-bottom:2rem}
+.sp-av{width:30px;height:30px;background:linear-gradient(135deg,var(--em2),var(--em));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.75rem;flex-shrink:0}
+.sp-art span{font-size:.8rem;color:var(--tx2);font-weight:300}
+.sp-pr-row{display:flex;gap:2rem;padding:1.5rem;background:rgba(0,255,170,.04);border:1px solid rgba(0,255,170,.07);margin-bottom:2rem}
+.sp-pl label{font-size:.58rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2);font-family:'Space Mono',monospace;display:block;margin-bottom:.3rem}
+.sp-pl span{font-family:'Space Mono',monospace;font-size:1.45rem;font-weight:700;color:var(--em)}
+.sp-pl span.d{color:#fff;font-size:1.05rem}
+.sp-acts{display:flex;gap:.75rem}
+@media(max-width:900px){.spotlight{grid-template-columns:1fr}.sp-img{height:280px}}
+/* COLLECTIONS */
+.coll-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(0,255,170,.04)}
+@media(max-width:900px){.coll-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.coll-grid{grid-template-columns:1fr}}
+.coll-card{background:var(--bg);padding:2rem;cursor:pointer;transition:background .3s;position:relative;overflow:hidden}
+.coll-card::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at var(--mx,50%) var(--my,50%),rgba(0,255,170,.05) 0%,transparent 55%);opacity:0;transition:opacity .3s;pointer-events:none}
+.coll-card:hover{background:rgba(0,10,20,.85)}.coll-card:hover::before{opacity:1}
+.coll-mosaic{display:grid;grid-template-columns:2fr 1fr;grid-template-rows:1fr 1fr;height:130px;gap:2px;margin-bottom:1.25rem}
+.coll-mosaic img{width:100%;height:100%;object-fit:cover;display:block}
+.coll-mosaic img:first-child{grid-row:1/3}
+.coll-nm{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.05em;color:#fff;margin-bottom:.3rem}
+.coll-cr{font-size:.7rem;color:var(--tx2);font-weight:300;margin-bottom:.875rem}
+.coll-meta{display:flex;gap:1.5rem}
+.cm label{font-size:.56rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2);font-family:'Space Mono',monospace;display:block;margin-bottom:.18rem}
+.cm span{font-family:'Space Mono',monospace;font-size:.82rem;color:var(--tx)}
+.cm span.up{color:var(--em)}
+/* AUCTIONS */
+.auc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:1.25rem}
+.auc-card{background:rgba(6,4,18,.97);border:1px solid rgba(170,68,255,.14);padding:1.5rem;position:relative;overflow:hidden;cursor:pointer;transition:all .3s}
+.auc-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--em3),transparent);opacity:.4}
+.auc-card:hover{border-color:rgba(170,68,255,.4);transform:translateY(-5px);box-shadow:0 28px 70px rgba(0,0,0,.75),0 0 40px rgba(170,68,255,.1)}
+.auc-img{width:100%;height:155px;object-fit:cover;margin-bottom:1.25rem;border:1px solid rgba(255,255,255,.05)}
+.auc-timer{display:flex;gap:.5rem;margin-bottom:1.25rem}
+.t-blk{flex:1;background:rgba(0,0,0,.55);border:1px solid rgba(255,255,255,.05);padding:.625rem;text-align:center}
+.t-v{font-family:'Space Mono',monospace;font-size:1.35rem;font-weight:700;display:block;color:#fff;line-height:1}
+.t-l{font-size:.53rem;letter-spacing:.12em;text-transform:uppercase;color:var(--tx2);margin-top:.22rem;display:block}
+.auc-nm{font-family:'Bebas Neue',sans-serif;font-size:1.15rem;letter-spacing:.05em;color:#fff;margin-bottom:.25rem}
+.auc-br{display:flex;align-items:center;justify-content:space-between;margin-top:.875rem}
+.auc-bv{font-family:'Space Mono',monospace;font-size:.85rem;color:var(--em3)}
+.btn-bid{padding:.48rem 1.1rem;border:1px solid var(--em3);color:var(--em3);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;background:transparent;cursor:pointer;font-family:'Outfit',sans-serif;transition:all .2s}
+.btn-bid:hover{background:var(--em3);color:#fff}
+/* NEWSLETTER */
+.nl{position:relative;z-index:2;padding:5.5rem 3rem;border-top:1px solid rgba(0,255,170,.05);border-bottom:1px solid rgba(0,255,170,.05);overflow:hidden}
+.nl::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 100% at 0% 50%,rgba(0,255,170,.05) 0%,transparent 55%),radial-gradient(ellipse 50% 80% at 100% 50%,rgba(0,136,255,.04) 0%,transparent 55%);pointer-events:none}
+.nl-in{position:relative;z-index:1;max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2.5rem}
+.nl h3{font-family:'Bebas Neue',sans-serif;font-size:3rem;letter-spacing:.05em;color:#fff;margin-bottom:.5rem}
+.nl p{font-size:.88rem;font-weight:300;color:var(--tx2);max-width:400px;line-height:1.75}
+.nl-form{display:flex;gap:0}
+.nl-inp{padding:.88rem 1.4rem;background:rgba(4,10,20,.92);border:1px solid rgba(0,255,170,.14);border-right:none;color:var(--tx);font-family:'Outfit',sans-serif;font-size:.88rem;width:290px}
+.nl-inp::placeholder{color:var(--tx2)}.nl-inp:focus{outline:none;border-color:var(--em)}
+.nl-btn{padding:.88rem 2rem;background:var(--em);color:#000;border:none;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .2s;white-space:nowrap}
+.nl-btn:hover{background:#00ddaa;box-shadow:0 0 50px rgba(0,255,170,.35)}
+/* FOOTER */
+footer{position:relative;z-index:2;background:rgba(0,0,0,.65);padding:4rem 3rem 2rem;border-top:1px solid rgba(255,255,255,.03)}
+.ft-g{max-width:1360px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem}
+@media(max-width:900px){.ft-g{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.ft-g{grid-template-columns:1fr}}
+.ft-brand{font-family:'Bebas Neue',sans-serif;font-size:1.4rem;letter-spacing:.15em;color:#fff;margin-bottom:.875rem}
+.ft-brand em{color:var(--em);font-style:normal}
+.ft-desc{font-size:.8rem;font-weight:300;color:var(--tx2);line-height:1.7;max-width:230px}
+.ft-col h5{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--tx2);font-family:'Space Mono',monospace;margin-bottom:1.25rem}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.ft-links a{color:var(--tx2);font-size:.8rem;font-weight:300;text-decoration:none;transition:color .2s;cursor:pointer}
+.ft-links a:hover{color:var(--em)}
+.ft-bot{max-width:1360px;margin:2.5rem auto 0;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,.035);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.ft-bot p{font-size:.7rem;color:var(--tx2);font-weight:300}
+.ft-leg{display:flex;gap:1.5rem}
+.ft-leg a{font-size:.7rem;color:var(--tx2);text-decoration:none;transition:color .2s;cursor:pointer}
+.ft-leg a:hover{color:var(--tx)}
+/* MODAL */
+.modal-bg{position:fixed;inset:0;z-index:1000;background:rgba(0,4,10,.94);backdrop-filter:blur(24px);display:none;align-items:center;justify-content:center;padding:2rem}
+.modal-bg.open{display:flex}
+.modal-box{background:rgba(4,10,20,.99);border:1px solid rgba(0,255,170,.14);max-width:880px;width:100%;max-height:88vh;overflow-y:auto;box-shadow:0 0 140px rgba(0,255,170,.07),0 80px 140px rgba(0,0,0,.85)}
+.modal-hd{padding:1.5rem 2rem;border-bottom:1px solid rgba(0,255,170,.05);display:flex;align-items:center;justify-content:space-between}
+.modal-hd h4{font-family:'Bebas Neue',sans-serif;font-size:1.25rem;letter-spacing:.1em;color:#fff}
+.modal-cl{width:30px;height:30px;border:1px solid rgba(255,255,255,.1);background:transparent;color:var(--tx2);font-size:1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.modal-cl:hover{border-color:var(--em);color:var(--em)}
+.modal-bd{padding:2rem;display:grid;grid-template-columns:1fr 1fr;gap:2.5rem}
+@media(max-width:640px){.modal-bd{grid-template-columns:1fr}}
+.modal-img{width:100%;aspect-ratio:1;object-fit:cover;border:1px solid rgba(0,255,170,.06)}
+.modal-info h2{font-family:'Bebas Neue',sans-serif;font-size:2rem;letter-spacing:.05em;color:#fff;margin-bottom:.75rem}
+.m-cr-row{display:flex;align-items:center;gap:.625rem;margin-bottom:1rem}
+.m-av{width:24px;height:24px;background:linear-gradient(135deg,var(--em2),var(--em));display:flex;align-items:center;justify-content:center;color:#000;font-weight:700;font-size:.62rem;flex-shrink:0}
+.m-cr-row span{font-size:.78rem;color:var(--tx2);font-weight:300}
+.modal-desc{font-size:.82rem;color:var(--tx2);line-height:1.75;margin-bottom:1.25rem;font-weight:300}
+.m-chips{display:flex;gap:.5rem;margin-bottom:1.25rem}
+.m-chip{font-size:.6rem;letter-spacing:.1em;text-transform:uppercase;padding:.2rem .65rem;border:1px solid rgba(255,255,255,.07);color:var(--tx2);font-family:'Space Mono',monospace}
+.m-pr-box{background:rgba(0,255,170,.04);border:1px solid rgba(0,255,170,.09);padding:1.25rem;margin-bottom:1.25rem}
+.m-pr-lbl{font-size:.58rem;letter-spacing:.15em;text-transform:uppercase;color:var(--tx2);font-family:'Space Mono',monospace;margin-bottom:.3rem}
+.m-pr-val{font-family:'Space Mono',monospace;font-size:1.9rem;font-weight:700;color:var(--em)}
+.m-meta{display:flex;gap:1.5rem;margin-bottom:1.5rem}
+.m-mi{font-size:.72rem;color:var(--tx2);font-weight:300}
+.m-mi strong{color:var(--tx);display:block;font-family:'Space Mono',monospace;font-size:.82rem}
+.m-acts{display:flex;gap:.75rem}
+.btn-buy{flex:1;padding:.88rem;background:var(--em2);color:#fff;border:none;font-family:'Outfit',sans-serif;font-size:.8rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .2s}
+.btn-buy:hover{background:#006fcc;box-shadow:0 0 40px rgba(0,136,255,.3)}
+/* ACTIVITY FEED */
+.act-feed{position:fixed;bottom:2rem;left:2rem;z-index:300;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+.a-toast{background:rgba(4,10,20,.97);border:1px solid rgba(0,255,170,.1);padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;max-width:275px;box-shadow:0 10px 40px rgba(0,0,0,.7),0 0 25px rgba(0,255,170,.04);animation:tIn .4s both,tOut .4s 4.2s both;pointer-events:auto}
+@keyframes tIn{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:translateX(0)}}
+@keyframes tOut{to{opacity:0;transform:translateX(-14px)}}
+.a-av{width:28px;height:28px;flex-shrink:0;background:linear-gradient(135deg,var(--em3),var(--em2));display:flex;align-items:center;justify-content:center;color:#fff;font-size:.68rem;font-weight:700}
+.a-txt{font-size:.7rem;color:var(--tx2);line-height:1.45;font-weight:300}
+.a-txt strong{color:var(--tx);font-weight:500}
+.a-p{color:var(--em);font-family:'Space Mono',monospace;font-size:.7rem}
+@media(max-width:540px){.act-feed{display:none}}
+/* NOISE + SCANLINES */
+body::after{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.028;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px}
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.012) 2px,rgba(0,0,0,.012) 4px)}
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(35px);transition:opacity .9s,transform .9s}
+.reveal.vis{opacity:1;transform:translateY(0)}
+</style>
+</head>
+<body>
+
+<div id="cursor"><div id="cur-dot"></div><div id="cur-ring"></div></div>
+
+<div id="loader">
+  <div class="ld-logo">ETHERGALLERIES</div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ldBar"></div></div>
+  <div class="ld-txt" id="ldTxt">Initializing scene…</div>
+</div>
+
+<canvas id="bg-canvas"></canvas>
+
+<nav id="nav">
+  <div class="nav-logo">ETHER<em>GALLERIES</em></div>
+  <div class="nav-links">
+    <a class="hl" onclick="goTo('#marketplace')">Marketplace</a>
+    <a class="hl" onclick="goTo('#collections')">Collections</a>
+    <a class="hl" onclick="goTo('#auctions')">Auctions</a>
+    <a href="/login.html" class="hl">Log In</a>
+    <a href="/signup.html" class="nav-cta">Get Started</a>
+  </div>
+</nav>
+
+<div class="ticker">
+  <div class="t-track" id="tTrack"></div>
+</div>
+
+<section id="hero">
+  <div class="hero-copy">
+    <div class="hero-ey">01 / The Premier Marketplace</div>
+    <h1>DISCOVER<br><span class="hl2">RARE <em>DIGITAL</em></span><br>ART</h1>
+    <p class="hero-p">Explore, collect, and trade exclusive NFTs from the world's most visionary digital artists — rendered in an immersive three-dimensional gallery.</p>
+    <div class="hero-btns">
+      <a class="btn-em" onclick="goTo('#marketplace')">Enter Gallery</a>
+      <a class="btn-ol" onclick="goTo('#collections')">Browse Collections</a>
+    </div>
+  </div>
+  <div class="hero-mets">
+    <div class="hm"><div class="hm-v" id="mVol">—</div><div class="hm-l">Total Volume</div></div>
+    <div class="hm"><div class="hm-v" id="mCount">—</div><div class="hm-l">Artworks</div></div>
+    <div class="hm"><div class="hm-v" id="mCr">—</div><div class="hm-l">Creators</div></div>
+  </div>
+</section>
+
+<section class="sec sec-alt" id="marketplace">
+  <div class="sec-in">
+    <div class="sec-ey reveal">02 / Browse &amp; Buy</div>
+    <h2 class="sec-h reveal">MARKET<span class="dm">PLACE</span></h2>
+    <div class="frow reveal" id="catRow">
+      <div class="fchip active" data-cat="all">All Works</div>
+      <div class="fchip" data-cat="Art">Art</div>
+      <div class="fchip" data-cat="Photography">Photography</div>
+      <div class="fchip" data-cat="Music">Music</div>
+      <div class="fchip" data-cat="Animation">Animated</div>
+      <select class="fsel" id="sortSel"><option value="newest">Latest</option><option value="price-high">Price ↓</option><option value="price-low">Price ↑</option><option value="likes">Most Liked</option></select>
+      <select class="fsel" id="priceSel"><option value="">All Prices</option><option value="0-1">Under 1 ETH</option><option value="1-5">1–5 ETH</option><option value="5-10">5–10 ETH</option><option value="10+">10+ ETH</option></select>
+    </div>
+    <div class="spotlight reveal" id="spotlight" style="display:none">
+      <img src="" alt="" class="sp-img" id="spImg"/>
+      <div class="sp-body">
+        <div class="sp-cat" id="spCat"></div>
+        <div class="sp-title" id="spTitle"></div>
+        <div class="sp-art"><div class="sp-av" id="spAv"></div><span>by <strong id="spArtist"></strong></span></div>
+        <div class="sp-pr-row">
+          <div class="sp-pl"><label>Current Price</label><span id="spPrice"></span></div>
+          <div class="sp-pl"><label>Views</label><span class="d" id="spViews"></span></div>
+          <div class="sp-pl"><label>Likes</label><span class="d" id="spLikes"></span></div>
+        </div>
+        <div class="sp-acts">
+          <button class="btn-em" id="spBuy">Buy Now</button>
+          <button class="btn-ol" id="spMore">View Details</button>
+        </div>
+      </div>
+    </div>
+    <div class="gal-scroll reveal">
+      <div class="gal-track" id="galTrack"><div style="color:var(--tx2);padding:3rem;font-size:.85rem;font-weight:300">Loading artworks…</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="collections">
+  <div class="sec-in">
+    <div class="sec-ey reveal">03 / Curated</div>
+    <h2 class="sec-h reveal">TOP COLLEC<span class="dm">TIONS</span></h2>
+    <div class="coll-grid reveal" id="collGrid"><div style="color:var(--tx2);padding:3rem;font-size:.85rem;grid-column:1/-1">Loading…</div></div>
+  </div>
+</section>
+
+<section class="sec sec-alt" id="auctions">
+  <div class="sec-in">
+    <div class="sec-ey reveal">04 / Live Now</div>
+    <h2 class="sec-h reveal">LIVE AUC<span class="dm">TIONS</span></h2>
+    <div class="auc-grid reveal" id="aucGrid"><div style="color:var(--tx2);padding:3rem;font-size:.85rem;grid-column:1/-1">Loading auctions…</div></div>
+  </div>
+</section>
+
+<div class="nl">
+  <div class="nl-in">
+    <div>
+      <h3>STAY AHEAD<br>OF THE DROP.</h3>
+      <p>Weekly curatorial picks, auction alerts, and exclusive collector insights delivered to your inbox.</p>
+    </div>
+    <div class="nl-form">
+      <input type="email" class="nl-inp" id="nlEmail" placeholder="your@email.com"/>
+      <button class="nl-btn" onclick="subscribe()">Subscribe</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="ft-g">
+    <div>
+      <div class="ft-brand">ETHER<em>GALLERIES</em></div>
+      <p class="ft-desc">The premier marketplace for rare digital art, NFTs, and on-chain collectibles. Empowering creators and collectors worldwide.</p>
+    </div>
+    <div class="ft-col"><h5>Explore</h5><ul class="ft-links"><li><a onclick="goTo('#marketplace')">Marketplace</a></li><li><a onclick="goTo('#collections')">Collections</a></li><li><a onclick="goTo('#auctions')">Live Auctions</a></li></ul></div>
+    <div class="ft-col"><h5>Account</h5><ul class="ft-links"><li><a href="/login.html">Login</a></li><li><a href="/signup.html">Sign Up</a></li><li><a href="/support.html">Support</a></li><li><a href="/blog.html">Blog</a></li></ul></div>
+    <div class="ft-col"><h5>Platform</h5><ul class="ft-links"><li><a>API Services ●</a></li><li><a>Marketplace ●</a></li><li><a>Auction Engine ●</a></li><li><a>Payments ●</a></li></ul></div>
+  </div>
+  <div class="ft-bot">
+    <p>© 2024 Ethergalleries. All rights reserved.</p>
+    <div class="ft-leg"><a href="/support.html">Privacy Policy</a><a href="/support.html">Terms of Service</a><a href="/support.html">Cookie Policy</a></div>
+  </div>
+</footer>
+
+<div class="modal-bg" id="modal">
+  <div class="modal-box">
+    <div class="modal-hd"><h4>ARTWORK DETAILS</h4><button class="modal-cl" onclick="closeModal()">✕</button></div>
+    <div class="modal-bd">
+      <div><img src="" alt="" class="modal-img" id="mImg"/></div>
+      <div class="modal-info">
+        <h2 id="mName"></h2>
+        <div class="m-cr-row"><div class="m-av" id="mAv"></div><span id="mCreator"></span></div>
+        <p class="modal-desc" id="mDesc"></p>
+        <div class="m-chips"><span class="m-chip" id="mCat"></span><span class="m-chip" id="mRar"></span></div>
+        <div class="m-pr-box"><div class="m-pr-lbl">Current Price</div><div class="m-pr-val" id="mPrice"></div></div>
+        <div class="m-meta">
+          <div class="m-mi"><strong id="mViews"></strong>Views</div>
+          <div class="m-mi"><strong id="mLikes"></strong>Likes</div>
+          <div class="m-mi"><strong id="mStatus"></strong>Status</div>
+        </div>
+        <div class="m-acts" id="mActs"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="act-feed" id="actFeed"></div>
+
+<script>
+/* CURSOR */
+const cur=document.getElementById('cursor'),dot=document.getElementById('cur-dot'),ring=document.getElementById('cur-ring');
+let cx=window.innerWidth/2,cy=window.innerHeight/2,rx=cx,ry=cy;
+document.addEventListener('mousemove',e=>{cx=e.clientX;cy=e.clientY;dot.style.left=cx+'px';dot.style.top=cy+'px'});
+(function rng(){rx+=(cx-rx)*.1;ry+=(cy-ry)*.1;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(rng)})();
+document.querySelectorAll('a,button,.nft-card,.fchip,.auc-card,.coll-card,.spotlight').forEach(el=>{el.addEventListener('mouseenter',()=>document.body.classList.add('hov'));el.addEventListener('mouseleave',()=>document.body.classList.remove('hov'))});
+
+/* ════ THREE.JS BACKGROUND ════ */
+(function(){
+  const W=()=>window.innerWidth,H=()=>window.innerHeight;
+  const canvas=document.getElementById('bg-canvas');
+  const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,1.5));
+  renderer.setSize(W(),H());
+  renderer.setClearColor(0x020408,1);
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(70,W()/H(),.1,2000);
+  cam.position.z=80;
+
+  /* Nebula shader */
+  const nVert=`varying vec2 vUv;void main(){vUv=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`;
+  const nFrag=`
+    precision highp float;
+    uniform float uT;uniform vec3 uC;uniform float uO;
+    varying vec2 vUv;
+    vec3 m289(vec3 x){return x-floor(x*(1./289.))*289.;}
+    vec4 m289(vec4 x){return x-floor(x*(1./289.))*289.;}
+    vec4 perm(vec4 x){return m289(((x*34.)+1.)*x);}
+    vec4 tiSqrt(vec4 r){return 1.79284291400159-.85373472095314*r;}
+    float sn(vec3 v){
+      const vec2 C=vec2(1./6.,1./3.);const vec4 D=vec4(0.,.5,1.,2.);
+      vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+      vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.-g;
+      vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
+      vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+C.yyy;vec3 x3=x0-D.yyy;
+      i=m289(i);
+      vec4 p=perm(perm(perm(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+      float n_=.142857142857;vec3 ns=n_*D.wyz-D.xzx;
+      vec4 j=p-49.*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.*x_);
+      vec4 x4=x_*ns.x+ns.yyyy;vec4 y4=y_*ns.x+ns.yyyy;vec4 h=1.-abs(x4)-abs(y4);
+      vec4 b0=vec4(x4.xy,y4.xy);vec4 b1=vec4(x4.zw,y4.zw);
+      vec4 s0=floor(b0)*2.+1.;vec4 s1=floor(b1)*2.+1.;vec4 sh=-step(h,vec4(0.));
+      vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+      vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+      vec4 norm=tiSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+      p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+      vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.);m=m*m;
+      return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+    }
+    void main(){
+      vec2 uv=vUv-.5;float t=uT*.055;
+      float n=sn(vec3(uv*2.2,t));n+=.5*sn(vec3(uv*4.8,t*1.4));n+=.25*sn(vec3(uv*9.5,t*1.8));
+      n=n*.5+.5;
+      float mask=1.-smoothstep(.0,.78,length(uv));
+      float alpha=pow(n,.75)*mask*uO;
+      gl_FragColor=vec4(uC,alpha);
+    }`;
+
+  [[0,20,-65,240,.18,0,.9,.6],[-80,-20,-80,180,.15,0,.4,1.],[90,30,-75,170,.13,.6,.2,1],[30,-40,-95,210,.1,0,.7,.9]].forEach(d=>{
+    const g=new THREE.PlaneGeometry(1,1);
+    const m=new THREE.ShaderMaterial({vertexShader:nVert,fragmentShader:nFrag,uniforms:{uT:{value:0},uC:{value:new THREE.Color(d[5],d[6],d[7])},uO:{value:d[4]}},transparent:true,depthWrite:false,side:THREE.DoubleSide,blending:THREE.AdditiveBlending});
+    const mesh=new THREE.Mesh(g,m);
+    mesh.position.set(d[0],d[1],d[2]);mesh.scale.setScalar(d[3]);
+    mesh.rotation.set(Math.random()*Math.PI,Math.random()*Math.PI,0);
+    scene.add(mesh);scene._nebulas=scene._nebulas||[];scene._nebulas.push(mesh);
+  });
+
+  /* Stars */
+  const N=7000,sP=new Float32Array(N*3),sC=new Float32Array(N*3),sS=new Float32Array(N);
+  const pal=[[0,1,.67],[0,.53,1],[.67,.27,1],[1,.3,.6],[1,1,1],[.3,.9,1]];
+  for(let i=0;i<N;i++){
+    const r=140+Math.random()*700,th=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1);
+    sP[i*3]=r*Math.sin(ph)*Math.cos(th);sP[i*3+1]=r*Math.sin(ph)*Math.sin(th);sP[i*3+2]=r*Math.cos(ph)-200;
+    const c=pal[Math.floor(Math.random()*pal.length)],b=.25+Math.random()*.75;
+    sC[i*3]=c[0]*b;sC[i*3+1]=c[1]*b;sC[i*3+2]=c[2]*b;
+    sS[i]=.25+Math.random()*1.8;
+  }
+  const sGeo=new THREE.BufferGeometry();
+  sGeo.setAttribute('position',new THREE.BufferAttribute(sP,3));
+  sGeo.setAttribute('color',new THREE.BufferAttribute(sC,3));
+  sGeo.setAttribute('size',new THREE.BufferAttribute(sS,1));
+  const sMat=new THREE.ShaderMaterial({
+    vertexShader:`attribute float size;varying vec3 vCol;uniform float uT;void main(){vCol=color;vec3 p=position;p.x+=sin(uT*.25+p.z*.008)*3.;p.y+=cos(uT*.2+p.x*.008)*3.;vec4 mv=modelViewMatrix*vec4(p,1.);gl_PointSize=size*(280./-mv.z);gl_Position=projectionMatrix*mv;}`,
+    fragmentShader:`varying vec3 vCol;void main(){float d=length(gl_PointCoord-.5)*2.;if(d>1.)discard;gl_FragColor=vec4(vCol,pow(1.-d,2.2));}`,
+    uniforms:{uT:{value:0}},vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending
+  });
+  scene.add(new THREE.Points(sGeo,sMat));
+
+  /* Rim-lit spheres */
+  const orbData=[[0,.4,1],[0,1,.67],[.58,.18,1],[1,.3,.55]];
+  const orbs=orbData.map((col,i)=>{
+    const g=new THREE.SphereGeometry(9+i*3,32,32);
+    const m=new THREE.ShaderMaterial({
+      vertexShader:`varying vec3 vN;varying vec3 vP;void main(){vN=normalize(normalMatrix*normal);vP=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`,
+      fragmentShader:`uniform float uT;uniform vec3 uC;varying vec3 vN;varying vec3 vP;void main(){float rim=pow(1.-abs(dot(vN,vec3(0.,0.,1.))),.5);float pulse=.5+.5*sin(uT*1.8+vP.y*2.5);gl_FragColor=vec4(uC*rim*(.5+.5*pulse),rim*.8);}`,
+      uniforms:{uT:{value:0},uC:{value:new THREE.Color(...col)}},
+      transparent:true,side:THREE.BackSide,blending:THREE.AdditiveBlending,depthWrite:false
+    });
+    const mesh=new THREE.Mesh(g,m);
+    const a=(i/orbData.length)*Math.PI*2;
+    mesh.position.set(Math.cos(a)*70,Math.sin(a)*35,-45);
+    scene.add(mesh);return mesh;
+  });
+
+  /* Wireframe polyhedra */
+  [[35,1,0x00ffaa,.035,40,-10,-65],[22,1,0x0088ff,.045,-55,20,-55],[15,2,0xaa44ff,.05,20,40,-75]].forEach(([r,d,c,o,x,y,z])=>{
+    const g=new THREE.IcosahedronGeometry(r,d);
+    const m=new THREE.MeshBasicMaterial({color:c,wireframe:true,transparent:true,opacity:o});
+    const mesh=new THREE.Mesh(g,m);
+    mesh.position.set(x,y,z);
+    mesh._rx=Math.random()*.001+.0005;mesh._ry=Math.random()*.001+.0005;mesh._rz=Math.random()*.001;
+    scene.add(mesh);scene._icos=scene._icos||[];scene._icos.push(mesh);
+  });
+
+  /* Constellation lines */
+  const pts=Array.from({length:25},()=>new THREE.Vector3((Math.random()-.5)*220,(Math.random()-.5)*110,-65+(Math.random()-.5)*30));
+  const linePos=[];
+  pts.forEach((a,i)=>pts.forEach((b,j)=>{if(j>i&&a.distanceTo(b)<55)linePos.push(...a.toArray(),...b.toArray())}));
+  const lGeo=new THREE.BufferGeometry();lGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(linePos),3));
+  scene.add(new THREE.LineSegments(lGeo,new THREE.LineBasicMaterial({color:0x00ffaa,transparent:true,opacity:.055})));
+  const dGeo=new THREE.BufferGeometry();dGeo.setAttribute('position',new THREE.BufferAttribute(new Float32Array(pts.flatMap(p=>p.toArray())),3));
+  scene.add(new THREE.Points(dGeo,new THREE.PointsMaterial({color:0x00ffaa,size:.8,transparent:true,opacity:.5})));
+
+  /* Floor grid */
+  const grid=new THREE.GridHelper(500,50,0x001a0a,0x000d05);grid.position.y=-55;scene.add(grid);
+
+  /* Floating ring */
+  const rg=new THREE.TorusGeometry(50,.08,8,64);
+  const rm=new THREE.MeshBasicMaterial({color:0x00ffaa,transparent:true,opacity:.05,wireframe:true});
+  const ring2=new THREE.Mesh(rg,rm);ring2.rotation.x=Math.PI/3;scene.add(ring2);
+
+  let mx=0,my=0,time=0;
+  window.addEventListener('mousemove',e=>{mx=(e.clientX/window.innerWidth-.5)*2;my=(e.clientY/window.innerHeight-.5)*2});
+  window.addEventListener('resize',()=>{cam.aspect=W()/H();cam.updateProjectionMatrix();renderer.setSize(W(),H())});
+
+  function animate(){
+    requestAnimationFrame(animate);time+=.007;
+    sMat.uniforms.uT.value=time;
+    (scene._nebulas||[]).forEach((n,i)=>n.material.uniforms.uT.value=time+i*8);
+    orbs.forEach((o,i)=>{o.material.uniforms.uT.value=time;o.position.y+=Math.sin(time+i*.7)*.012});
+    (scene._icos||[]).forEach(ic=>{ic.rotation.x+=ic._rx;ic.rotation.y+=ic._ry;ic.rotation.z+=ic._rz});
+    ring2.rotation.z+=.0008;ring2.rotation.y+=.0004;
+    cam.position.x+=(mx*14-cam.position.x)*.022;
+    cam.position.y+=(-my*9-cam.position.y)*.022;
+    cam.lookAt(0,0,0);
+    renderer.render(scene,cam);
+  }
+  animate();
+})();
+
+/* LOADER */
+const ldMsgs=['Initializing scene…','Spinning up Three.js…','Loading the galaxy…','Fetching artworks…','Almost ready…'];
+let lp=0;const ldBar=document.getElementById('ldBar'),ldTxt=document.getElementById('ldTxt');
+(function tick(){if(lp>=100){document.getElementById('loader').classList.add('gone');return}lp+=Math.random()*2.5+.5;if(lp>100)lp=100;ldBar.style.width=lp+'%';ldTxt.textContent=ldMsgs[Math.min(Math.floor(lp/22),ldMsgs.length-1)];setTimeout(tick,45)})();
+
+/* DATA */
+let allNFTs=[],allAuctions=[],curCat='all';
+async function loadData(){
+  try{
+    const[nr,ar]=await Promise.all([fetch('https://changes-sample.onrender.com/api/marketplace/nfts'),fetch('https://changes-sample.onrender.com/api/marketplace/auctions')]);
+    if(nr.ok)allNFTs=await nr.json();if(ar.ok)allAuctions=await ar.json();
+  }catch(e){}
+  buildTicker();updateMetrics();renderNFTs();renderCollections();renderAuctions();
+}
+function updateMetrics(){
+  const vol=allNFTs.filter(n=>n.price).reduce((a,b)=>a+(b.price||0),0);
+  document.getElementById('mVol').textContent=vol.toFixed(0)+' ETH';
+  document.getElementById('mCount').textContent=allNFTs.length;
+  document.getElementById('mCr').textContent=new Set(allNFTs.map(n=>n.creator)).size;
+}
+document.getElementById('catRow').addEventListener('click',e=>{const c=e.target.closest('.fchip');if(!c||!c.dataset.cat)return;document.querySelectorAll('.fchip').forEach(x=>x.classList.remove('active'));c.classList.add('active');curCat=c.dataset.cat;renderNFTs()});
+document.getElementById('sortSel').addEventListener('change',renderNFTs);
+document.getElementById('priceSel').addEventListener('change',renderNFTs);
+function filtNFTs(){
+  let f=[...allNFTs];
+  if(curCat!=='all')f=f.filter(n=>n.category===curCat);
+  const pr=document.getElementById('priceSel').value;
+  if(pr==='10+')f=f.filter(n=>(n.price||0)>=10);
+  else if(pr){const[lo,hi]=pr.split('-').map(Number);f=f.filter(n=>(n.price||0)>=lo&&(n.price||0)<hi)}
+  switch(document.getElementById('sortSel').value){
+    case'price-high':f.sort((a,b)=>(b.price||0)-(a.price||0));break;
+    case'price-low':f.sort((a,b)=>(a.price||0)-(b.price||0));break;
+    case'likes':f.sort((a,b)=>(b.likes||0)-(a.likes||0));break;
+    default:f.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  }
+  return f;
+}
+function rc(r){return{Legendary:'r-leg',Epic:'r-ep',Rare:'r-ra',Uncommon:'r-un',Common:'r-co'}[r]||'r-co'}
+function renderNFTs(){
+  const f=filtNFTs();
+  const sp=f.find(n=>n.status==='listed'&&n.price)||f[0];
+  renderSpotlight(sp);
+  const t=document.getElementById('galTrack');
+  if(!f.length){t.innerHTML='<div style="color:var(--tx2);padding:3rem;font-size:.85rem;font-weight:300">No artworks match your filters.</div>';return}
+  t.innerHTML=f.slice(0,28).map(n=>{
+    const bd=n.status==='auction'?'<span class="nbadge b-auc">Auction</span>':n.status==='listed'?'<span class="nbadge b-sale">For Sale</span>':'';
+    return`<div class="nft-card" onclick="openModal('${n._id}')">
+      <img class="nft-img" src="${n.imageUrl||''}" alt="${n.name}" loading="lazy" onerror="this.style.background='#0a1020'"/>
+      <div class="nft-scan"></div>
+      <span class="nft-rar ${rc(n.rarity)}">${n.rarity||'Common'}</span>
+      <div class="nft-body">
+        <div class="nft-cat">${n.category||'Art'}</div>
+        <div class="nft-name">${n.name||'Untitled'}</div>
+        <div class="nft-cr">by ${n.creator||'Unknown'}</div>
+        <div class="nft-ft">
+          <div class="nft-pr">${n.price?n.price.toFixed(2)+' '+(n.currency||'ETH'):'Unlisted'}<small>Current Price</small></div>
+          ${bd}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function renderSpotlight(n){
+  const el=document.getElementById('spotlight');
+  if(!n){el.style.display='none';return}
+  el.style.display='grid';
+  document.getElementById('spImg').src=n.imageUrl||'';
+  document.getElementById('spCat').textContent=n.category||'Art';
+  document.getElementById('spTitle').textContent=n.name||'';
+  document.getElementById('spAv').textContent=(n.creator||'U')[0].toUpperCase();
+  document.getElementById('spArtist').textContent=n.creator||'Unknown';
+  document.getElementById('spPrice').textContent=n.price?`${n.price.toFixed(2)} ${n.currency||'ETH'}`:'Not listed';
+  document.getElementById('spViews').textContent=n.views||0;
+  document.getElementById('spLikes').textContent=n.likes||0;
+  document.getElementById('spBuy').onclick=()=>n.status==='listed'?buyNFT(n._id):placeBid(n._id);
+  document.getElementById('spMore').onclick=()=>openModal(n._id);
+}
+function renderCollections(){
+  const g=document.getElementById('collGrid');
+  const byC={};allNFTs.forEach(n=>{const k=n.creator||'Unknown';if(!byC[k])byC[k]=[];byC[k].push(n)});
+  const cols=Object.entries(byC).map(([c,ns])=>({c,ns,tot:ns.length,floor:Math.min(...ns.map(n=>n.price||0))})).sort((a,b)=>b.tot-a.tot).slice(0,6);
+  if(!cols.length){g.innerHTML='<div style="color:var(--tx2);padding:3rem;grid-column:1/-1">No collections found.</div>';return}
+  const ph='https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&auto=format&fit=crop';
+  g.innerHTML=cols.map(col=>{
+    const imgs=col.ns.slice(0,3);const chg=(Math.random()*30-5).toFixed(1);const up=parseFloat(chg)>=0;
+    return`<div class="coll-card" onclick="goTo('#marketplace')">
+      <div class="coll-mosaic">
+        <img src="${imgs[0]?.imageUrl||ph}" alt="" onerror="this.src='${ph}'">
+        <img src="${imgs[1]?.imageUrl||ph}" alt="" onerror="this.src='${ph}'">
+        <img src="${imgs[2]?.imageUrl||ph}" alt="" onerror="this.src='${ph}'">
+      </div>
+      <div class="coll-nm">${col.c}'s Collection</div>
+      <div class="coll-cr">by ${col.c} · ${col.tot} items</div>
+      <div class="coll-meta">
+        <div class="cm"><label>Floor</label><span>${col.floor.toFixed(2)} ETH</span></div>
+        <div class="cm"><label>Volume</label><span>${(col.tot*col.floor).toFixed(1)} ETH</span></div>
+        <div class="cm"><label>24h</label><span class="${up?'up':''}">${up?'+':''}${chg}%</span></div>
+      </div>
+    </div>`;
+  }).join('');
+  document.querySelectorAll('.coll-card').forEach(c=>{c.addEventListener('mousemove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',((e.clientX-r.left)/r.width*100)+'%');c.style.setProperty('--my',((e.clientY-r.top)/r.height*100)+'%')})});
+}
+function tLeft(end){const d=Math.max(0,end-Date.now());return{h:String(Math.floor(d/3600000)).padStart(2,'0'),m:String(Math.floor((d%3600000)/60000)).padStart(2,'0'),s:String(Math.floor((d%60000)/1000)).padStart(2,'0')}}
+function renderAuctions(){
+  const g=document.getElementById('aucGrid');
+  const now=Date.now();
+  const act=allAuctions.filter(a=>new Date(a.startTime)<=now&&new Date(a.endTime)>now);
+  if(!act.length){g.innerHTML='<div style="color:var(--tx2);padding:3rem;font-size:.85rem;font-weight:300;grid-column:1/-1">No live auctions right now. Check back soon.</div>';return}
+  const nftMap={};allNFTs.forEach(n=>nftMap[n._id]=n);
+  const ph='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format';
+  g.innerHTML=act.slice(0,4).map(a=>{
+    const nft=nftMap[a.nft]||nftMap[a.nftId];
+    const img=nft?.imageUrl||ph;const name=nft?.name||a.title||'Untitled';
+    const bid=a.currentBid||a.startingPrice||'—';const curr=a.currency||'ETH';
+    const tl=tLeft(new Date(a.endTime));
+    return`<div class="auc-card">
+      <img src="${img}" class="auc-img" alt="${name}" onerror="this.src='${ph}'"/>
+      <div class="auc-timer">
+        <div class="t-blk"><span class="t-v" id="ah_${a._id}">${tl.h}</span><span class="t-l">Hrs</span></div>
+        <div class="t-blk"><span class="t-v" id="am_${a._id}">${tl.m}</span><span class="t-l">Min</span></div>
+        <div class="t-blk"><span class="t-v" id="as_${a._id}">${tl.s}</span><span class="t-l">Sec</span></div>
+      </div>
+      <div class="auc-nm">${name}</div>
+      <div class="auc-br"><div class="auc-bv">${bid} ${curr}</div><button class="btn-bid" onclick="placeBid('${a._id}')">Place Bid</button></div>
+    </div>`;
+  }).join('');
+  act.slice(0,4).forEach(a=>{
+    const end=new Date(a.endTime);
+    setInterval(()=>{const t=tLeft(end);const h=document.getElementById(`ah_${a._id}`),m=document.getElementById(`am_${a._id}`),s=document.getElementById(`as_${a._id}`);if(h)h.textContent=t.h;if(m)m.textContent=t.m;if(s)s.textContent=t.s},1000);
+  });
+}
+/* TICKER */
+function buildTicker(){
+  const fb=[{n:'CryptoPunk #9981',p:'12.4',u:true},{n:'Bored Ape #3312',p:'84.0',u:true},{n:'Azuki #5521',p:'15.3',u:false},{n:'Doodles #8841',p:'7.8',u:true},{n:'CloneX #1029',p:'9.2',u:true},{n:'Moonbirds #441',p:'18.6',u:false}];
+  const data=allNFTs.length?allNFTs.slice(0,12).map(n=>({n:n.name,p:(n.price||0).toFixed(2),u:Math.random()>.35})):fb;
+  const html=data.map(t=>`<div class="ti"><span class="ti-n">${t.n}</span><span>${t.p} ETH</span><span class="${t.u?'ti-u':'ti-d'}">${t.u?'+':'-'}${(Math.random()*12+.5).toFixed(1)}%</span></div><div class="ti-sep"></div>`).join('');
+  const el=document.getElementById('tTrack');if(el)el.innerHTML=html+html;
+}
+/* MODAL */
+let curNFT=null;
+function openModal(id){
+  curNFT=allNFTs.find(n=>n._id===id);if(!curNFT)return;
+  document.getElementById('mImg').src=curNFT.imageUrl||'';
+  document.getElementById('mName').textContent=curNFT.name||'';
+  document.getElementById('mAv').textContent=(curNFT.creator||'U')[0].toUpperCase();
+  document.getElementById('mCreator').textContent='by '+(curNFT.creator||'Unknown');
+  document.getElementById('mDesc').textContent=curNFT.description||'No description available.';
+  document.getElementById('mCat').textContent=curNFT.category||'Art';
+  document.getElementById('mRar').textContent=curNFT.rarity||'Common';
+  document.getElementById('mPrice').textContent=curNFT.price?`${curNFT.price.toFixed(2)} ${curNFT.currency||'ETH'}`:'Not for sale';
+  document.getElementById('mViews').textContent=(curNFT.views||0)+'  ';
+  document.getElementById('mLikes').textContent=(curNFT.likes||0)+'  ';
+  document.getElementById('mStatus').textContent=(curNFT.status||'unlisted')+'  ';
+  const ab=document.getElementById('mActs');
+  if(curNFT.status==='listed')ab.innerHTML=`<button class="btn-buy" onclick="buyNFT('${curNFT._id}')">Buy Now — ${curNFT.price} ${curNFT.currency||'ETH'}</button>`;
+  else if(curNFT.status==='auction')ab.innerHTML=`<button class="btn-buy" style="background:var(--em3)" onclick="placeBid('${curNFT._id}')">Place Bid</button>`;
+  else ab.innerHTML=`<div style="color:var(--tx2);font-size:.8rem;font-weight:300;padding:.875rem;border:1px solid rgba(255,255,255,.06)">Not currently for sale.</div>`;
+  document.getElementById('modal').classList.add('open');document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('modal').classList.remove('open');document.body.style.overflow=''}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===document.getElementById('modal'))closeModal()});
+async function buyNFT(id){
+  const n=allNFTs.find(x=>x._id===id);if(!n)return;
+  const token=localStorage.getItem('token');if(!token){alert('Please log in first.');return}
+  if(!confirm(`Buy "${n.name}" for ${n.price} ${n.currency||'ETH'}?`))return;
+  try{const r=await fetch(`https://changes-sample.onrender.com/api/marketplace/nfts/${id}/buy`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}});if(!r.ok)throw new Error((await r.json()).message);alert('Purchase successful!');closeModal();loadData()}catch(e){alert('Error: '+(e.message||'Purchase failed'))}
+}
+async function placeBid(id){const amt=prompt('Enter bid amount (ETH):');if(!amt)return;alert(`Bid of ${amt} ETH submitted!`)}
+function subscribe(){const v=document.getElementById('nlEmail').value;if(!v||!v.includes('@')){alert('Please enter a valid email.');return}alert(`Subscribed with ${v}!`);document.getElementById('nlEmail').value=''}
+/* ACTIVITY */
+const fN=['0xAlpha','CryptoSage','NFTWanderer','PixelKing','ArtCollector','0xZen','MetaVault','NeonDreamer'];
+const fM=[(n,p)=>`<strong>${n}</strong> purchased for <span class="a-p">${p} ETH</span>`,(n,p)=>`<strong>${n}</strong> bid <span class="a-p">${p} ETH</span>`,(n)=>`<strong>${n}</strong> listed a new piece`];
+function spawnToast(){
+  const feed=document.getElementById('actFeed');if(!feed)return;
+  const n=fN[Math.floor(Math.random()*fN.length)],p=(Math.random()*15+.5).toFixed(2);
+  const fn=fM[Math.floor(Math.random()*fM.length)];
+  const init=n.replace('0x','')[0].toUpperCase();
+  const t=document.createElement('div');t.className='a-toast';
+  t.innerHTML=`<div class="a-av">${init}</div><div class="a-txt">${fn(n,p)}<br><span style="font-size:.62rem;color:var(--tx2)">${Math.floor(Math.random()*59)+1}s ago</span></div>`;
+  feed.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transform='translateX(-12px)';t.style.transition='all .4s';setTimeout(()=>t.remove(),400)},4600);
+  if(feed.children.length>3)feed.firstChild.remove();
+  setTimeout(spawnToast,Math.random()*7000+4500);
+}
+setTimeout(spawnToast,3000);
+/* SCROLL REVEAL */
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('vis')})},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+window.addEventListener('scroll',()=>{const n=document.getElementById('nav');n.style.background=window.scrollY>60?'rgba(2,4,10,.98)':''});
+function goTo(s){const el=document.querySelector(s);if(el)el.scrollIntoView({behavior:'smooth'})}
+loadData();buildTicker();
+</script>
+</body>
+</html>

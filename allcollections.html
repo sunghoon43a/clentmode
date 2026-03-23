@@ -469,6 +469,17 @@ body::after {
       <a href="/login.html" class="mob-login"><i class="bi bi-box-arrow-in-right"></i> Login</a>
       <a href="/signup.html" class="mob-signup"><i class="bi bi-person-plus"></i> Sign Up</a>
     </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const token = localStorage.getItem("token");
+    const ctaRow = document.querySelector(".mob-cta-row");
+
+    if (token) {
+      ctaRow.style.display = "none";
+    }
+  });
+</script>
   </nav>
 </div>
 <!-- ═══ END SHARED NAVBAR ═══ -->

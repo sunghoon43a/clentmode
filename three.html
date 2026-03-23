@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Ethergalleries — Discover Rare Digital Art</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --green:#22c55e;--green-l:#4ade80;--blue:#3b82f6;--purple:#8b5cf6;
+  --bg:#06080f;--s1:#0f1520;--s2:#141c2e;--s3:#1a2340;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.12);
+  --tx:#eef2ff;--tx2:#8896b3;--tx3:#3a4560;
+}
+html,body{width:100%;height:100%;overflow-x:hidden;background:var(--bg);color:var(--tx);font-family:'DM Sans',sans-serif;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--s3);border-radius:2px}
+canvas{position:fixed;top:0;left:0;z-index:0;pointer-events:none}
+
+/* ─── NAV ─── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:60px;display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;
+  background:rgba(6,8,15,.7);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--b1);
+  transition:background .3s;
+}
+.nav-logo{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;letter-spacing:-.02em}
+.nav-logo span{color:var(--green)}
+.nav-links{display:flex;gap:1.75rem;align-items:center}
+.nav-links a{color:var(--tx2);font-size:.875rem;font-weight:500;text-decoration:none;transition:color .2s;cursor:pointer}
+.nav-links a:hover{color:#fff}
+.nav-btn{padding:.5rem 1.25rem;border-radius:8px;background:var(--green);color:#000;font-weight:700;font-size:.875rem;border:none;cursor:pointer;transition:background .2s,transform .2s;text-decoration:none}
+.nav-btn:hover{background:var(--green-l);transform:translateY(-1px)}
+@media(max-width:640px){.nav-links .hide-mob{display:none}}
+
+/* ─── HERO ─── */
+#hero{
+  position:relative;z-index:1;
+  min-height:100vh;display:flex;align-items:center;
+  padding:7rem 2rem 4rem;pointer-events:none;
+}
+.hero-inner{max-width:600px;pointer-events:auto}
+.hero-pill{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.25);
+  color:var(--green);font-size:.7rem;font-weight:700;letter-spacing:.12em;
+  text-transform:uppercase;padding:.35rem 1rem;border-radius:50px;
+  margin-bottom:1.75rem;animation:fadeUp .6s both;
+}
+.hero-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+h1{
+  font-family:'Syne',sans-serif;font-size:clamp(2.8rem,6vw,5rem);
+  font-weight:800;line-height:1.04;letter-spacing:-.03em;color:#fff;
+  margin-bottom:1.25rem;animation:fadeUp .6s .1s both;
+}
+h1 .gr{
+  background:linear-gradient(135deg,var(--green) 0%,#a3f7c6 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text
+}
+.hero-sub{font-size:1.05rem;color:var(--tx2);line-height:1.75;margin-bottom:2rem;max-width:460px;animation:fadeUp .6s .2s both}
+.hero-ctas{display:flex;gap:1rem;flex-wrap:wrap;animation:fadeUp .6s .3s both}
+.btn-p{padding:.9rem 2rem;border-radius:10px;background:var(--green);color:#000;font-weight:700;font-size:.95rem;border:none;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem}
+.btn-p:hover{background:var(--green-l);transform:translateY(-2px);box-shadow:0 12px 32px rgba(34,197,94,.3)}
+.btn-g{padding:.9rem 2rem;border-radius:10px;background:rgba(255,255,255,.05);color:#fff;border:1px solid rgba(255,255,255,.14);font-size:.95rem;font-weight:600;cursor:pointer;transition:all .25s;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;backdrop-filter:blur(8px)}
+.btn-g:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.25);transform:translateY(-1px)}
+.hero-stats{display:flex;gap:2.5rem;margin-top:3rem;animation:fadeUp .6s .4s both}
+.h-stat label{display:block;font-size:.68rem;text-transform:uppercase;letter-spacing:.1em;color:var(--tx3);margin-bottom:.3rem}
+.h-stat span{font-family:'Space Mono',monospace;font-size:1.4rem;font-weight:700;color:var(--green)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+/* ─── TICKER ─── */
+.ticker-wrap{
+  position:relative;z-index:2;overflow:hidden;
+  background:rgba(0,0,0,.4);border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);
+  padding:.5rem 0;
+}
+.ticker-track{display:flex;gap:3rem;animation:tickerScroll 28s linear infinite;width:max-content;align-items:center}
+.ticker-track:hover{animation-play-state:paused}
+@keyframes tickerScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+.t-item{display:flex;align-items:center;gap:.6rem;white-space:nowrap;font-size:.8rem;color:var(--tx2)}
+.t-name{font-weight:600;color:var(--tx)}
+.t-up{color:var(--green);font-weight:700;font-size:.75rem}
+.t-dn{color:#f87171;font-weight:700;font-size:.75rem}
+.t-dot{width:4px;height:4px;border-radius:50%;background:var(--b2)}
+
+/* ─── SECTIONS ─── */
+.section{position:relative;z-index:2;padding:5rem 2rem}
+.section.alt{background:rgba(0,0,0,.25)}
+.wrap{max-width:1320px;margin:0 auto}
+.sec-label{display:inline-flex;align-items:center;gap:.4rem;font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:.75rem}
+.sec-title{font-family:'Syne',sans-serif;font-size:clamp(1.75rem,3.5vw,2.5rem);font-weight:800;letter-spacing:-.025em;color:#fff;margin-bottom:.75rem}
+.sec-title .acc{color:var(--blue)}
+.sec-title .gr2{background:linear-gradient(90deg,var(--green),var(--green-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sec-sub{color:var(--tx2);font-size:.975rem;line-height:1.7;max-width:500px;margin-bottom:2.5rem}
+.sec-hd{text-align:center}.sec-hd .sec-sub{margin:0 auto 2.5rem}
+
+/* ─── CATEGORY CHIPS ─── */
+.cat-row{display:flex;flex-wrap:wrap;gap:.625rem;margin-bottom:2.5rem}
+.cat-chip{
+  display:inline-flex;align-items:center;gap:.5rem;
+  padding:.55rem 1.1rem;border-radius:50px;
+  background:var(--s1);border:1px solid var(--b1);
+  cursor:pointer;transition:all .22s;color:var(--tx2);font-size:.875rem;font-weight:500;
+}
+.cat-chip:hover,.cat-chip.active{border-color:var(--green);color:var(--green);background:rgba(34,197,94,.08)}
+.cat-ic{font-size:.85rem}
+
+/* ─── 3D VIEWPORT ─── */
+.viewport-3d{
+  position:relative;z-index:2;
+  height:560px;border-radius:24px;overflow:hidden;
+  margin:0 2rem 0;max-width:1320px;margin-left:auto;margin-right:auto;
+  border:1px solid var(--b1);
+  background:linear-gradient(145deg,var(--s1),var(--s2));
+  cursor:grab;
+}
+.viewport-3d:active{cursor:grabbing}
+.viewport-3d canvas{position:absolute!important;pointer-events:auto!important}
+.vp-overlay{
+  position:absolute;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  display:flex;gap:.75rem;z-index:10;pointer-events:none;
+}
+.vp-pill{
+  background:rgba(0,0,0,.65);backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,.1);border-radius:50px;
+  padding:.4rem 1rem;font-size:.75rem;color:rgba(255,255,255,.65);
+}
+.vp-pill strong{color:#fff}
+
+/* ─── NFT GRID ─── */
+.nft-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1.25rem}
+.nft-card{
+  background:var(--s1);border:1px solid var(--b1);border-radius:18px;
+  overflow:hidden;cursor:pointer;transition:all .3s;
+  transform:translateY(0);
+}
+.nft-card:hover{transform:translateY(-6px);box-shadow:0 20px 56px rgba(0,0,0,.65);border-color:var(--b2)}
+.nft-card img{width:100%;height:200px;object-fit:cover;display:block;transition:transform .4s}
+.nft-card:hover img{transform:scale(1.04)}
+.nft-body{padding:1rem 1.1rem}
+.nft-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.925rem;color:var(--tx);margin-bottom:.2rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.nft-creator{font-size:.8rem;color:var(--tx2);margin-bottom:.875rem}
+.nft-foot{display:flex;align-items:center;justify-content:space-between;padding-top:.75rem;border-top:1px solid var(--b1)}
+.nft-price{font-family:'Space Mono',monospace;font-size:.9rem;font-weight:700;color:var(--green)}
+.nft-price small{display:block;font-size:.65rem;font-weight:400;color:var(--tx3);font-family:'DM Sans',sans-serif;margin-top:.1rem}
+.nft-views{font-size:.75rem;color:var(--tx3)}
+.nft-badge{
+  display:inline-block;font-size:.62rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;
+  padding:.22rem .6rem;border-radius:4px;margin-bottom:.6rem;
+}
+.badge-sale{background:var(--green);color:#000}
+.badge-auc{background:var(--purple);color:#fff}
+
+/* ─── FLOATING CARDS ─── */
+.floating-section{position:relative;z-index:2;padding:5rem 2rem}
+.float-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem}
+@media(max-width:900px){.float-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:580px){.float-grid{grid-template-columns:1fr}}
+.float-card{
+  background:linear-gradient(145deg,var(--s1),var(--s2));
+  border:1px solid var(--b1);border-radius:22px;padding:1.75rem;
+  transition:all .3s;cursor:pointer;
+}
+.float-card:hover{transform:translateY(-8px) scale(1.01);box-shadow:0 28px 64px rgba(0,0,0,.7);border-color:var(--b2)}
+.float-card .ico{
+  width:48px;height:48px;border-radius:14px;display:flex;align-items:center;justify-content:center;
+  font-size:1.4rem;margin-bottom:1.25rem;
+}
+.ico-b{background:rgba(59,130,246,.15)}
+.ico-g{background:rgba(34,197,94,.15)}
+.ico-p{background:rgba(139,92,246,.15)}
+.float-card h3{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;color:#fff;margin-bottom:.5rem}
+.float-card p{font-size:.875rem;color:var(--tx2);line-height:1.65}
+
+/* ─── AUCTIONS ─── */
+.auc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.25rem}
+.auc-card{
+  background:linear-gradient(145deg,#141230,#1a1050);
+  border:1px solid rgba(139,92,246,.2);border-radius:22px;padding:1.5rem;
+  transition:all .3s;overflow:hidden;position:relative;
+}
+.auc-card::before{content:'';position:absolute;top:-30px;right:-30px;width:120px;height:120px;border-radius:50%;background:rgba(139,92,246,.08);pointer-events:none}
+.auc-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(139,92,246,.2)}
+.auc-img{width:100%;height:130px;object-fit:cover;border-radius:10px;margin-bottom:1rem;border:1px solid rgba(255,255,255,.08)}
+.auc-timer{display:flex;gap:.875rem;margin-bottom:1rem}
+.t-seg{text-align:center;background:rgba(0,0,0,.35);padding:.5rem .7rem;border-radius:8px;min-width:48px}
+.t-val{font-family:'Space Mono',monospace;font-size:1.3rem;font-weight:700;display:block;color:#fff}
+.t-lbl{font-size:.58rem;text-transform:uppercase;letter-spacing:.08em;opacity:.6;color:#fff}
+.auc-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:#fff;margin-bottom:.25rem}
+.auc-bid{font-size:.82rem;color:rgba(255,255,255,.6);margin-bottom:1rem}
+.btn-bid{
+  display:inline-flex;align-items:center;gap:.4rem;
+  background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.18);
+  padding:.5rem 1.2rem;border-radius:50px;font-size:.82rem;font-weight:600;cursor:pointer;
+  font-family:inherit;transition:all .2s;
+}
+.btn-bid:hover{background:rgba(255,255,255,.2);transform:translateY(-1px)}
+
+/* ─── NEWSLETTER ─── */
+.nl{
+  position:relative;z-index:2;
+  padding:4.5rem 2rem;
+  background:linear-gradient(135deg,rgba(13,28,20,.9),rgba(9,21,36,.9));
+  border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);
+}
+.nl::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 50% 80% at 5% 50%,rgba(34,197,94,.08) 0%,transparent 60%),radial-gradient(ellipse 40% 60% at 95% 50%,rgba(59,130,246,.06) 0%,transparent 60%);pointer-events:none}
+.nl-inner{position:relative;z-index:1;max-width:1320px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem}
+.nl h3{font-family:'Syne',sans-serif;font-size:1.75rem;font-weight:800;color:#fff;margin-bottom:.5rem}
+.nl p{color:var(--tx2);font-size:.95rem;max-width:400px}
+.nl-form{display:flex;gap:.75rem;flex-wrap:wrap}
+.nl-form input{padding:.8rem 1.2rem;background:var(--s1);border:1px solid var(--b2);border-radius:10px;color:var(--tx);font-family:inherit;font-size:.9rem;width:280px;transition:border-color .2s}
+.nl-form input::placeholder{color:var(--tx3)}
+.nl-form input:focus{outline:none;border-color:var(--green)}
+.nl-form button{padding:.8rem 1.75rem;background:var(--green);color:#000;border:none;border-radius:10px;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.nl-form button:hover{background:var(--green-l);transform:translateY(-1px)}
+
+/* ─── FOOTER ─── */
+footer{position:relative;z-index:2;background:rgba(0,0,0,.4);border-top:1px solid var(--b1);padding:3rem 2rem 1.5rem}
+.ft-inner{max-width:1320px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem}
+@media(max-width:900px){.ft-inner{grid-template-columns:1fr 1fr}}
+@media(max-width:540px){.ft-inner{grid-template-columns:1fr}}
+.ft-brand{font-family:'Syne',sans-serif;font-size:1.25rem;font-weight:800;color:#fff;margin-bottom:1rem}
+.ft-brand span{color:var(--green)}
+.ft-desc{color:var(--tx2);font-size:.875rem;line-height:1.7;max-width:260px}
+.ft-col h5{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:1.1rem}
+.ft-links{list-style:none;display:flex;flex-direction:column;gap:.6rem}
+.ft-links a{color:var(--tx2);font-size:.875rem;text-decoration:none;transition:color .2s}
+.ft-links a:hover{color:var(--green)}
+.ft-bottom{max-width:1320px;margin:2rem auto 0;padding-top:1.5rem;border-top:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+.ft-bottom p{font-size:.8rem;color:var(--tx3)}
+.ft-legal{display:flex;gap:1.5rem}
+.ft-legal a{font-size:.8rem;color:var(--tx3);text-decoration:none;transition:color .2s}
+.ft-legal a:hover{color:var(--tx2)}
+
+/* ─── MODAL ─── */
+.modal-bg{
+  position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center;padding:1rem;
+}
+.modal-bg.show{display:flex}
+.modal-box{
+  background:var(--s2);border:1px solid var(--b2);border-radius:28px;
+  max-width:880px;width:100%;max-height:90vh;overflow-y:auto;
+}
+.modal-head{padding:1.25rem 1.75rem;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.modal-head h5{font-family:'Syne',sans-serif;font-weight:700;color:#fff;margin:0}
+.modal-close{
+  width:34px;height:34px;border-radius:9px;background:var(--s1);border:1px solid var(--b1);
+  color:var(--tx2);font-size:1.15rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;
+}
+.modal-close:hover{background:var(--s3);color:#fff}
+.modal-body{padding:1.75rem;display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+@media(max-width:640px){.modal-body{grid-template-columns:1fr}}
+.modal-img{width:100%;border-radius:14px;object-fit:cover;border:1px solid var(--b1)}
+.modal-info h2{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:.75rem}
+.modal-creator{display:inline-flex;align-items:center;gap:.5rem;background:var(--s1);border:1px solid var(--b1);padding:.4rem 1rem;border-radius:50px;margin-bottom:1rem}
+.cr-av{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--green));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.65rem;flex-shrink:0}
+.modal-creator span{font-size:.82rem;color:var(--tx)}
+.modal-desc{font-size:.875rem;color:var(--tx2);line-height:1.65;margin-bottom:1rem}
+.modal-pr-box{background:var(--s1);border:1px solid var(--b1);border-radius:14px;padding:1.25rem;margin-bottom:1rem}
+.modal-pr-lbl{font-size:.72rem;color:var(--tx2);margin-bottom:.25rem}
+.modal-pr-val{font-family:'Space Mono',monospace;font-size:1.75rem;font-weight:700;color:var(--green)}
+.modal-actions{display:flex;gap:.75rem;margin-top:1rem}
+.btn-buy{flex:1;padding:.9rem;border-radius:14px;background:var(--blue);color:#fff;border:none;font-family:inherit;font-size:.9rem;font-weight:700;cursor:pointer;transition:all .2s}
+.btn-buy:hover{background:#2563eb;transform:translateY(-1px)}
+
+/* ─── ACTIVITY TOAST ─── */
+.activity-feed{position:fixed;bottom:1.5rem;left:1.5rem;z-index:200;display:flex;flex-direction:column;gap:.5rem;pointer-events:none}
+.a-toast{
+  background:var(--s2);border:1px solid var(--b2);border-radius:12px;
+  padding:.75rem 1rem;display:flex;align-items:center;gap:.75rem;max-width:290px;
+  box-shadow:0 8px 32px rgba(0,0,0,.5);
+  animation:toastIn .4s both,toastOut .4s 4.2s both;pointer-events:auto;
+}
+@keyframes toastIn{from{opacity:0;transform:translateX(-20px)}to{opacity:1;transform:translateX(0)}}
+@keyframes toastOut{from{opacity:1}to{opacity:0;transform:translateX(-20px)}}
+.a-av{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),#ec4899);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:.8rem;flex-shrink:0}
+.a-text{font-size:.76rem;color:var(--tx2);line-height:1.4}
+.a-text strong{color:var(--tx)}
+.a-price{color:var(--green);font-weight:700;font-family:'Space Mono',monospace}
+@media(max-width:540px){.activity-feed{display:none}}
+
+/* ─── SCROLLBAR CUSTOM ─── */
+.section,.ticker-wrap,.nl,footer{backdrop-filter:none}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">ether<span>galleries</span></div>
+  <div class="nav-links">
+    <a class="hide-mob" onclick="scrollTo('#marketplace')">Marketplace</a>
+    <a class="hide-mob" onclick="scrollTo('#collections')">Collections</a>
+    <a class="hide-mob" onclick="scrollTo('#auctions')">Auctions</a>
+    <a href="/login.html" class="hide-mob">Login</a>
+    <a href="/signup.html" class="nav-btn">Sign Up</a>
+  </div>
+</nav>
+
+<!-- TICKER -->
+<div class="ticker-wrap" style="position:relative;z-index:2;margin-top:60px">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-pill">✦ The Premier Digital Art Marketplace</div>
+    <h1>Discover <span class="gr">Rare Digital</span><br>Art &amp; Collectibles</h1>
+    <p class="hero-sub">Explore, collect, and trade exclusive NFTs from emerging artists and established creators worldwide — rendered in immersive 3D.</p>
+    <div class="hero-ctas">
+      <a href="#marketplace" class="btn-p" onclick="event.preventDefault();scrollTo('#marketplace')">⬡ Explore Marketplace</a>
+      <a href="#viewport3d" class="btn-g" onclick="event.preventDefault();scrollTo('#viewport3d')">◈ View in 3D</a>
+    </div>
+    <div class="hero-stats">
+      <div class="h-stat"><label>Total Volume</label><span id="statVol">—</span></div>
+      <div class="h-stat"><label>Artworks</label><span id="statCount">—</span></div>
+      <div class="h-stat"><label>Creators</label><span id="statCreators">—</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- 3D VIEWPORT -->
+<div style="position:relative;z-index:2;padding:0 2rem;max-width:1360px;margin:0 auto" id="viewport3d">
+  <div class="sec-label" style="margin-bottom:.75rem">◈ Interactive</div>
+  <div class="sec-title" style="margin-bottom:.5rem">Gallery in <span class="acc">3D Space</span></div>
+  <p style="color:var(--tx2);font-size:.9rem;margin-bottom:1.25rem">Drag to rotate • Scroll to zoom • Click a card to inspect</p>
+  <div class="viewport-3d" id="vp3d">
+    <div class="vp-overlay">
+      <div class="vp-pill"><strong id="vpCount">0</strong> artworks floating</div>
+      <div class="vp-pill">Drag to orbit</div>
+    </div>
+  </div>
+</div>
+
+<!-- CATEGORIES -->
+<section class="section" id="categories">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-label">◈ Browse</div>
+      <h2 class="sec-title">Explore by <span class="acc">Category</span></h2>
+      <p class="sec-sub">Curated collections across every medium and style.</p>
+    </div>
+    <div class="cat-row" id="catRow">
+      <div class="cat-chip active" data-cat="all"><span class="cat-ic">⬡</span> All</div>
+      <div class="cat-chip" data-cat="Art"><span class="cat-ic">◈</span> Art</div>
+      <div class="cat-chip" data-cat="Photography"><span class="cat-ic">◎</span> Photography</div>
+      <div class="cat-chip" data-cat="Music"><span class="cat-ic">♩</span> Music</div>
+      <div class="cat-chip" data-cat="Animation"><span class="cat-ic">▷</span> Animated</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETPLACE -->
+<section class="section alt" id="marketplace">
+  <div class="wrap">
+    <div class="sec-label">◈ Browse &amp; Buy</div>
+    <h2 class="sec-title" style="margin-bottom:.5rem">Marketplace</h2>
+    <div style="display:flex;align-items:center;gap:.875rem;flex-wrap:wrap;margin-bottom:1.5rem">
+      <select id="sortSel" style="padding:.5rem 1rem;background:var(--s1);border:1px solid var(--b1);border-radius:8px;color:var(--tx);font-family:inherit;font-size:.875rem;cursor:pointer">
+        <option value="newest">Newest First</option>
+        <option value="price-high">Price: High → Low</option>
+        <option value="price-low">Price: Low → High</option>
+        <option value="likes">Most Liked</option>
+      </select>
+      <select id="priceSel" style="padding:.5rem 1rem;background:var(--s1);border:1px solid var(--b1);border-radius:8px;color:var(--tx);font-family:inherit;font-size:.875rem;cursor:pointer">
+        <option value="">All Prices</option>
+        <option value="0-1">Under 1 ETH</option>
+        <option value="1-5">1–5 ETH</option>
+        <option value="5-10">5–10 ETH</option>
+        <option value="10+">10+ ETH</option>
+      </select>
+    </div>
+    <div class="nft-grid" id="nftGrid">
+      <div style="color:var(--tx2);padding:3rem;grid-column:1/-1;text-align:center">Loading artworks…</div>
+    </div>
+    <div style="text-align:center;margin-top:2.5rem" id="loadMoreWrap" style="display:none">
+      <button onclick="loadMore()" class="btn-g">Load more</button>
+    </div>
+  </div>
+</section>
+
+<!-- WHY ETHERGALLERIES -->
+<section class="floating-section" id="collections">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-label">◈ Why Us</div>
+      <h2 class="sec-title">Built for <span class="gr2">Collectors</span></h2>
+      <p class="sec-sub" style="margin:0 auto 2.5rem">Everything you need to discover, collect, and trade rare digital art.</p>
+    </div>
+    <div class="float-grid">
+      <div class="float-card">
+        <div class="ico ico-b">🔮</div>
+        <h3>Immersive 3D Gallery</h3>
+        <p>Experience artworks in a fully interactive Three.js environment. Orbit, zoom, and inspect every piece from any angle.</p>
+      </div>
+      <div class="float-card">
+        <div class="ico ico-g">⚡</div>
+        <h3>Real-time Auctions</h3>
+        <p>Live countdowns, instant bid updates, and smart contract settlement. Never miss a drop again.</p>
+      </div>
+      <div class="float-card">
+        <div class="ico ico-p">🎨</div>
+        <h3>Curated by Experts</h3>
+        <p>Our editorial team hand-picks collections from emerging and established artists across every category.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LIVE AUCTIONS -->
+<section class="section alt" id="auctions">
+  <div class="wrap">
+    <div class="sec-hd">
+      <div class="sec-label">◈ Live Now</div>
+      <h2 class="sec-title">Live <span style="color:var(--purple)">Auctions</span></h2>
+      <p class="sec-sub">Active bids closing soon — place yours before time runs out.</p>
+    </div>
+    <div class="auc-grid" id="aucGrid">
+      <div style="color:var(--tx2);grid-column:1/-1;text-align:center;padding:3rem">Loading auctions…</div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWSLETTER -->
+<div class="nl">
+  <div class="nl-inner">
+    <div>
+      <h3>Stay ahead of the drop.</h3>
+      <p>Weekly curatorial picks, auction alerts, and exclusive collector insights — straight to your inbox.</p>
+    </div>
+    <div class="nl-form">
+      <input type="email" id="nlEmail" placeholder="your@email.com"/>
+      <button onclick="subscribeNL()">Subscribe</button>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="ft-inner">
+    <div>
+      <div class="ft-brand">ether<span>galleries</span></div>
+      <p class="ft-desc">The premier marketplace for rare digital art, NFTs, and on-chain collectibles. Empowering creators and collectors worldwide.</p>
+    </div>
+    <div class="ft-col">
+      <h5>Explore</h5>
+      <ul class="ft-links">
+        <li><a onclick="scrollTo('#marketplace')">Marketplace</a></li>
+        <li><a onclick="scrollTo('#collections')">Collections</a></li>
+        <li><a onclick="scrollTo('#auctions')">Auctions</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h5>Account</h5>
+      <ul class="ft-links">
+        <li><a href="/login.html">Login</a></li>
+        <li><a href="/signup.html">Sign Up</a></li>
+        <li><a href="/support.html">Support</a></li>
+        <li><a href="/blog.html">Blog</a></li>
+      </ul>
+    </div>
+    <div class="ft-col">
+      <h5>Status</h5>
+      <ul class="ft-links">
+        <li><a>API Services ●</a></li>
+        <li><a>Marketplace ●</a></li>
+        <li><a>Auctions ●</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="ft-bottom">
+    <p>© 2024 Ethergalleries. All rights reserved.</p>
+    <div class="ft-legal">
+      <a href="/support.html">Privacy</a>
+      <a href="/support.html">Terms</a>
+      <a href="/support.html">Cookies</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ARTWORK MODAL -->
+<div class="modal-bg" id="artModal">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h5>Artwork Details</h5>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div><img src="" alt="" class="modal-img" id="mImg" style="height:340px;"/></div>
+      <div class="modal-info">
+        <h2 id="mName"></h2>
+        <div class="modal-creator"><div class="cr-av" id="mAv"></div><span id="mCreator"></span></div>
+        <p class="modal-desc" id="mDesc"></p>
+        <div style="display:flex;gap:.5rem;margin-bottom:.75rem">
+          <span style="padding:.2rem .65rem;border-radius:50px;font-size:.68rem;font-weight:600;background:var(--s1);border:1px solid var(--b1);color:var(--tx2)" id="mCat"></span>
+          <span style="padding:.2rem .65rem;border-radius:50px;font-size:.68rem;font-weight:600;background:var(--s1);border:1px solid var(--b1);color:var(--tx2)" id="mRar"></span>
+        </div>
+        <div class="modal-pr-box">
+          <div class="modal-pr-lbl">Current Price</div>
+          <div class="modal-pr-val" id="mPrice"></div>
+        </div>
+        <div style="font-size:.82rem;color:var(--tx2);margin-bottom:.75rem">
+          <span id="mViews"></span> views · <span id="mLikes"></span> likes
+        </div>
+        <div class="modal-actions" id="mActions"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVITY FEED -->
+<div class="activity-feed" id="actFeed"></div>
+
+<script>
+/* ─── GLOBAL SCENE (full-page background) ─── */
+(function(){
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,.1,1000);
+  const renderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(window.innerWidth,window.innerHeight);
+  renderer.setClearColor(0x000000,0);
+  document.body.insertBefore(renderer.domElement,document.body.firstChild);
+  cam.position.z=60;
+
+  /* Particle field */
+  const geo=new THREE.BufferGeometry();
+  const N=3000;
+  const pos=new Float32Array(N*3);
+  const col=new Float32Array(N*3);
+  const palettes=[[.133,.773,.369],[.231,.51,.961],[.545,.361,.961],[1,.318,.533]];
+  for(let i=0;i<N;i++){
+    pos[i*3]=(Math.random()-.5)*200;
+    pos[i*3+1]=(Math.random()-.5)*200;
+    pos[i*3+2]=(Math.random()-.5)*200;
+    const p=palettes[Math.floor(Math.random()*palettes.length)];
+    const t=.3+Math.random()*.7;
+    col[i*3]=p[0]*t;col[i*3+1]=p[1]*t;col[i*3+2]=p[2]*t;
+  }
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+  const mat=new THREE.PointsMaterial({size:.35,vertexColors:true,transparent:true,opacity:.7});
+  scene.add(new THREE.Points(geo,mat));
+
+  /* Floating rings */
+  const rings=[];
+  const ringData=[[40,0.08,0x22c55e,.25],[55,0.05,0x3b82f6,.15],[28,0.12,0x8b5cf6,.2]];
+  ringData.forEach(([r,t,c,o])=>{
+    const g=new THREE.TorusGeometry(r,t,8,64);
+    const m=new THREE.MeshBasicMaterial({color:c,transparent:true,opacity:o,wireframe:true});
+    const ring=new THREE.Mesh(g,m);
+    ring.rotation.x=Math.random()*Math.PI;
+    ring.rotation.y=Math.random()*Math.PI;
+    scene.add(ring);rings.push(ring);
+  });
+
+  let mx=0,my=0;
+  window.addEventListener('mousemove',e=>{mx=(e.clientX/window.innerWidth-.5)*2;my=(e.clientY/window.innerHeight-.5)*2;});
+  window.addEventListener('resize',()=>{cam.aspect=window.innerWidth/window.innerHeight;cam.updateProjectionMatrix();renderer.setSize(window.innerWidth,window.innerHeight);});
+
+  let t2=0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t2+=.003;
+    cam.position.x+=(mx*8-cam.position.x)*.03;
+    cam.position.y+=(-my*8-cam.position.y)*.03;
+    cam.lookAt(scene.position);
+    rings[0].rotation.x+=.002;rings[0].rotation.y+=.001;
+    rings[1].rotation.y+=.0015;rings[1].rotation.z+=.001;
+    rings[2].rotation.x+=.001;rings[2].rotation.z+=.002;
+    mat.opacity=.4+Math.sin(t2)*.15;
+    renderer.render(scene,cam);
+  }
+  animate();
+})();
+
+/* ─── VIEWPORT 3D (card gallery) ─── */
+let vpScene,vpCam,vpRenderer,vpCards3d=[],vpDragging=false,vpPrevMouse={x:0,y:0},vpTheta=0,vpPhi=.3,vpRadius=18;
+function initViewport3d(nfts){
+  const container=document.getElementById('vp3d');
+  const W=container.clientWidth,H=container.clientHeight;
+  vpScene=new THREE.Scene();
+  vpCam=new THREE.PerspectiveCamera(60,W/H,.1,200);
+  vpCam.position.set(0,3,vpRadius);vpCam.lookAt(0,0,0);
+  vpRenderer=new THREE.WebGLRenderer({antialias:true,alpha:true});
+  vpRenderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  vpRenderer.setSize(W,H);
+  vpRenderer.setClearColor(0x000000,0);
+  container.appendChild(vpRenderer.domElement);
+
+  /* Ambient + directional light */
+  vpScene.add(new THREE.AmbientLight(0xffffff,.6));
+  const dl=new THREE.DirectionalLight(0x22c55e,.8);dl.position.set(5,10,5);vpScene.add(dl);
+  const dl2=new THREE.DirectionalLight(0x3b82f6,.4);dl2.position.set(-5,-5,-5);vpScene.add(dl2);
+
+  /* Floor grid */
+  const grid=new THREE.GridHelper(40,20,0x1a2340,0x1a2340);grid.position.y=-3;vpScene.add(grid);
+
+  /* Create card meshes */
+  const sample=nfts.filter(n=>n.imageUrl&&n.mediaType!=='video').slice(0,16);
+  document.getElementById('vpCount').textContent=sample.length;
+  const loader=new THREE.TextureLoader();
+  sample.forEach((nft,i)=>{
+    const angle=(i/sample.length)*Math.PI*2;
+    const row=Math.floor(i/8);
+    const r=7+row*4;
+    const x=Math.cos(angle)*r,z=Math.sin(angle)*r;
+    const y=(Math.random()-.5)*4;
+    const geo=new THREE.BoxGeometry(2.8,2,0.05);
+    const mat2=new THREE.MeshStandardMaterial({color:0x1a2340,roughness:.8,metalness:.2});
+    const mesh=new THREE.Mesh(geo,mat2);
+    mesh.position.set(x,y,z);
+    mesh.rotation.y=angle+Math.PI/2;
+    mesh.userData={nft,baseY:y,idx:i};
+    vpScene.add(mesh);vpCards3d.push(mesh);
+
+    /* Load texture */
+    loader.load(nft.imageUrl,tex=>{
+      tex.encoding=THREE.sRGBEncoding;
+      const img=new THREE.MeshStandardMaterial({map:tex,roughness:.4,metalness:.1});
+      mesh.material=img;
+    },undefined,()=>{});
+
+    /* Label plane */
+    const canvas2=document.createElement('canvas');canvas2.width=512;canvas2.height=80;
+    const ctx=canvas2.getContext('2d');
+    ctx.fillStyle='rgba(0,0,0,.7)';
+    ctx.roundRect(0,0,512,80,12);ctx.fill();
+    ctx.fillStyle='#22c55e';ctx.font='bold 18px monospace';
+    const price=nft.price?`${nft.price.toFixed(2)} ETH`:'Unlisted';
+    ctx.fillText(price,16,30);
+    ctx.fillStyle='rgba(255,255,255,.85)';ctx.font='500 16px sans-serif';
+    ctx.fillText(nft.name?.substring(0,28)||'Untitled',16,56);
+    const labelTex=new THREE.CanvasTexture(canvas2);
+    const labelGeo=new THREE.PlaneGeometry(2.8,.44);
+    const labelMat=new THREE.MeshBasicMaterial({map:labelTex,transparent:true,side:THREE.DoubleSide});
+    const label=new THREE.Mesh(labelGeo,labelMat);
+    label.position.set(x,y-.95,z);label.rotation.y=angle+Math.PI/2;
+    vpScene.add(label);
+  });
+
+  /* Mouse events */
+  let lastClick=0;
+  container.addEventListener('mousedown',e=>{vpDragging=true;vpPrevMouse={x:e.clientX,y:e.clientY};});
+  window.addEventListener('mouseup',()=>vpDragging=false);
+  window.addEventListener('mousemove',e=>{
+    if(!vpDragging)return;
+    const dx=e.clientX-vpPrevMouse.x,dy=e.clientY-vpPrevMouse.y;
+    vpTheta-=dx*.004;vpPhi-=dy*.003;
+    vpPhi=Math.max(.05,Math.min(Math.PI/2-.05,vpPhi));
+    vpPrevMouse={x:e.clientX,y:e.clientY};
+  });
+  container.addEventListener('wheel',e=>{vpRadius=Math.max(8,Math.min(28,vpRadius+e.deltaY*.01));},{passive:true});
+  container.addEventListener('click',e=>{
+    if(Date.now()-lastClick<200)return;lastClick=Date.now();
+    const rect=container.getBoundingClientRect();
+    const mouse=new THREE.Vector2(((e.clientX-rect.left)/W)*2-1,-(((e.clientY-rect.top)/H)*2-1));
+    const ray=new THREE.Raycaster();ray.setFromCamera(mouse,vpCam);
+    const hits=ray.intersectObjects(vpCards3d);
+    if(hits.length)openModal(hits[0].object.userData.nft);
+  });
+
+  /* Touch drag */
+  let tPrev={x:0,y:0};
+  container.addEventListener('touchstart',e=>{vpDragging=true;tPrev={x:e.touches[0].clientX,y:e.touches[0].clientY};},{passive:true});
+  container.addEventListener('touchend',()=>vpDragging=false);
+  container.addEventListener('touchmove',e=>{
+    if(!vpDragging)return;
+    const dx=e.touches[0].clientX-tPrev.x,dy=e.touches[0].clientY-tPrev.y;
+    vpTheta-=dx*.004;vpPhi-=dy*.003;vpPhi=Math.max(.05,Math.min(Math.PI/2-.05,vpPhi));
+    tPrev={x:e.touches[0].clientX,y:e.touches[0].clientY};
+  },{passive:true});
+
+  window.addEventListener('resize',()=>{
+    const nW=container.clientWidth,nH=container.clientHeight;
+    vpCam.aspect=nW/nH;vpCam.updateProjectionMatrix();vpRenderer.setSize(nW,nH);
+  });
+
+  let vt=0;
+  function vpAnimate(){
+    requestAnimationFrame(vpAnimate);
+    vt+=.005;
+    vpCards3d.forEach((m,i)=>{m.position.y=m.userData.baseY+Math.sin(vt+i*.5)*.2;});
+    const sx=Math.sin(vpPhi)*Math.sin(vpTheta)*vpRadius;
+    const sy=Math.cos(vpPhi)*vpRadius;
+    const sz=Math.sin(vpPhi)*Math.cos(vpTheta)*vpRadius;
+    vpCam.position.lerp(new THREE.Vector3(sx,sy,sz),.06);
+    vpCam.lookAt(0,0,0);
+    vpRenderer.render(vpScene,vpCam);
+  }
+  vpAnimate();
+}
+
+/* ─── DATA ─── */
+let allNFTs=[],allAuctions=[],curCat='all',displayCount=16;
+
+async function loadData(){
+  try{
+    const[nr,ar]=await Promise.all([
+      fetch('https://changes-sample.onrender.com/api/marketplace/nfts'),
+      fetch('https://changes-sample.onrender.com/api/marketplace/auctions'),
+    ]);
+    if(nr.ok)allNFTs=await nr.json();
+    if(ar.ok)allAuctions=await ar.json();
+    renderNFTs();renderAuctions();buildTicker();updateStats();
+    setTimeout(()=>initViewport3d(allNFTs),200);
+  }catch(e){console.error(e);}
+}
+
+function updateStats(){
+  const vols=allNFTs.filter(n=>n.price).reduce((a,b)=>a+(b.price||0),0);
+  const creators=new Set(allNFTs.map(n=>n.creator)).size;
+  document.getElementById('statVol').textContent=vols.toFixed(0)+' ETH';
+  document.getElementById('statCount').textContent=allNFTs.length.toLocaleString();
+  document.getElementById('statCreators').textContent=creators;
+}
+
+/* FILTERS */
+document.getElementById('sortSel').addEventListener('change',renderNFTs);
+document.getElementById('priceSel').addEventListener('change',renderNFTs);
+document.getElementById('catRow').addEventListener('click',e=>{
+  const chip=e.target.closest('.cat-chip');if(!chip)return;
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  chip.classList.add('active');curCat=chip.dataset.cat;displayCount=16;renderNFTs();
+});
+
+function renderNFTs(){
+  let f=[...allNFTs];
+  if(curCat!=='all')f=f.filter(n=>n.category===curCat);
+  const pr=document.getElementById('priceSel').value;
+  if(pr==='10+')f=f.filter(n=>(n.price||0)>=10);
+  else if(pr){const[lo,hi]=pr.split('-').map(Number);f=f.filter(n=>(n.price||0)>=lo&&(n.price||0)<hi);}
+  switch(document.getElementById('sortSel').value){
+    case'price-low':f.sort((a,b)=>(a.price||0)-(b.price||0));break;
+    case'price-high':f.sort((a,b)=>(b.price||0)-(a.price||0));break;
+    case'likes':f.sort((a,b)=>(b.likes||0)-(a.likes||0));break;
+    default:f.sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+  }
+  const g=document.getElementById('nftGrid');
+  if(!f.length){g.innerHTML='<div style="color:var(--tx2);padding:3rem;grid-column:1/-1;text-align:center">No artworks found. Try adjusting filters.</div>';return;}
+  const rarCol={Legendary:'#f59e0b',Epic:'#8b5cf6',Rare:'#3b82f6',Uncommon:'#14b8a6',Common:'#4a5568'};
+  const slice=f.slice(0,displayCount);
+  g.innerHTML=slice.map(nft=>{
+    const bd=nft.status==='auction'?'<span class="nft-badge badge-auc">Auction</span>':nft.status==='listed'?'<span class="nft-badge badge-sale">For Sale</span>':'';
+    const rc=rarCol[nft.rarity]||'#4a5568';
+    return`<div class="nft-card" onclick="openModal(${JSON.stringify(nft).replace(/"/g,'&quot;')})">
+      <img src="${nft.imageUrl||'/placeholder.svg'}" alt="${nft.name}" loading="lazy" onerror="this.style.background='var(--s2)'">
+      <div class="nft-body">
+        ${bd?`<div style="margin-bottom:.5rem">${bd}</div>`:''}
+        <div class="nft-title">${nft.name}</div>
+        <div class="nft-creator">by ${nft.creator||'Unknown'}</div>
+        <div class="nft-foot">
+          <div class="nft-price">${nft.price?nft.price.toFixed(2)+' '+(nft.currency||'ETH'):'Unlisted'}<small>Current Price</small></div>
+          <div class="nft-views" style="font-size:.72rem;color:${rc};font-weight:600;border:1px solid ${rc}44;padding:.15rem .5rem;border-radius:50px;">${nft.rarity||'Common'}</div>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  const lm=document.getElementById('loadMoreWrap');
+  if(f.length>displayCount){lm.style.display='block';}else{lm.style.display='none';}
+}
+
+function loadMore(){displayCount+=16;renderNFTs();}
+
+/* AUCTIONS */
+function tLeft(end){const d=Math.max(0,end-Date.now());return{h:String(Math.floor(d/3600000)).padStart(2,'0'),m:String(Math.floor((d%3600000)/60000)).padStart(2,'0'),s:String(Math.floor((d%60000)/1000)).padStart(2,'0')};}
+function renderAuctions(){
+  const g=document.getElementById('aucGrid');
+  const now=Date.now();
+  const act=allAuctions.filter(a=>new Date(a.startTime)<=now&&new Date(a.endTime)>now);
+  if(!act.length){g.innerHTML='<div style="color:var(--tx2);grid-column:1/-1;text-align:center;padding:3rem">No live auctions right now.</div>';return;}
+  const ph='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400&auto=format';
+  const nftMap={};allNFTs.forEach(n=>nftMap[n._id]=n);
+  g.innerHTML=act.slice(0,4).map(a=>{
+    const nft=nftMap[a.nft]||nftMap[a.nftId];
+    const img=nft?.imageUrl||ph;const name=nft?.name||a.title||'Untitled';
+    const bid=a.currentBid||a.startingPrice||'—';const curr=a.currency||'ETH';
+    const tl=tLeft(new Date(a.endTime));
+    return`<div class="auc-card">
+      <img src="${img}" class="auc-img" alt="${name}" onerror="this.src='${ph}'">
+      <div class="auc-timer">
+        <div class="t-seg"><span class="t-val" id="ah_${a._id}">${tl.h}</span><span class="t-lbl">Hrs</span></div>
+        <div class="t-seg"><span class="t-val" id="am_${a._id}">${tl.m}</span><span class="t-lbl">Min</span></div>
+        <div class="t-seg"><span class="t-val" id="as_${a._id}">${tl.s}</span><span class="t-lbl">Sec</span></div>
+      </div>
+      <div class="auc-name">${name}</div>
+      <div class="auc-bid">Current Bid: <strong>${bid} ${curr}</strong></div>
+      <button class="btn-bid" onclick="placeBid('${a._id}')">🔨 Place Bid</button>
+    </div>`;
+  }).join('');
+  act.slice(0,4).forEach(a=>{
+    const end=new Date(a.endTime);
+    setInterval(()=>{
+      const t=tLeft(end);
+      const h=document.getElementById(`ah_${a._id}`);const m=document.getElementById(`am_${a._id}`);const s=document.getElementById(`as_${a._id}`);
+      if(h)h.textContent=t.h;if(m)m.textContent=t.m;if(s)s.textContent=t.s;
+    },1000);
+  });
+}
+
+/* MODAL */
+let curNFT=null;
+function openModal(nft){
+  if(typeof nft==='string')nft=allNFTs.find(n=>n._id===nft);
+  if(!nft)return;curNFT=nft;
+  document.getElementById('mImg').src=nft.imageUrl||'';
+  document.getElementById('mName').textContent=nft.name||'';
+  document.getElementById('mAv').textContent=(nft.creator||'U')[0].toUpperCase();
+  document.getElementById('mCreator').textContent='by '+(nft.creator||'Unknown');
+  document.getElementById('mDesc').textContent=nft.description||'No description available.';
+  document.getElementById('mCat').textContent=nft.category||'Art';
+  document.getElementById('mRar').textContent=nft.rarity||'Common';
+  document.getElementById('mPrice').textContent=nft.price?`${nft.price.toFixed(2)} ${nft.currency||'ETH'}`:'Not for sale';
+  document.getElementById('mViews').textContent=(nft.views||0)+' views';
+  document.getElementById('mLikes').textContent=(nft.likes||0)+' likes';
+  const ab=document.getElementById('mActions');
+  if(nft.status==='listed')ab.innerHTML=`<button class="btn-buy" onclick="buyNFT('${nft._id}')">🛒 Buy Now — ${nft.price} ${nft.currency||'ETH'}</button>`;
+  else if(nft.status==='auction')ab.innerHTML=`<button class="btn-buy" style="background:var(--purple)" onclick="placeBid('${nft._id}')">🔨 Place Bid</button>`;
+  else ab.innerHTML=`<div style="color:var(--tx2);font-size:.875rem;padding:.75rem;background:var(--s1);border-radius:10px">Not currently for sale.</div>`;
+  document.getElementById('artModal').classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){document.getElementById('artModal').classList.remove('show');document.body.style.overflow='';curNFT=null;}
+document.getElementById('artModal').addEventListener('click',e=>{if(e.target===document.getElementById('artModal'))closeModal();});
+
+async function buyNFT(id){
+  const nft=allNFTs.find(n=>n._id===id);if(!nft)return;
+  if(!confirm(`Buy "${nft.name}" for ${nft.price} ${nft.currency||'ETH'}?`))return;
+  const token=localStorage.getItem('token');if(!token){alert('Please log in to purchase.');return;}
+  try{
+    const r=await fetch(`https://changes-sample.onrender.com/api/marketplace/nfts/${id}/buy`,{method:'POST',headers:{'Content-Type':'application/json','Authorization':`Bearer ${token}`}});
+    if(!r.ok)throw new Error((await r.json()).message);
+    alert('Purchase successful!');closeModal();loadData();
+  }catch(e){alert('Error: '+(e.message||'Purchase failed'));}
+}
+async function placeBid(id){
+  const amt=prompt('Enter bid amount (ETH):');if(!amt)return;
+  alert(`Bid of ${amt} ETH submitted!`);
+}
+
+/* TICKER */
+function buildTicker(){
+  const items=allNFTs.length?allNFTs.slice(0,10):[];
+  const fallback=[{name:'CryptoPunk #9981',p:'12.4',up:true},{name:'Bored Ape #3312',p:'84.0',up:true},{name:'Azuki #5521',p:'15.3',up:false},{name:'Doodles #8841',p:'7.8',up:true}];
+  const data=items.length?items.map(n=>({name:n.name,p:(n.price||0).toFixed(2),up:Math.random()>.3})):fallback;
+  const html=data.map(t=>`<div class="t-item"><span class="t-name">${t.name}</span><span>${t.p} ETH</span><span class="${t.up?'t-up':'t-dn'}">${t.up?'+':'-'}${(Math.random()*12+.5).toFixed(1)}%</span></div><div class="t-dot"></div>`).join('');
+  const el=document.getElementById('tickerTrack');if(el)el.innerHTML=html+html;
+}
+
+/* NEWSLETTER */
+function subscribeNL(){
+  const v=document.getElementById('nlEmail').value;
+  if(!v||!v.includes('@')){alert('Please enter a valid email.');return;}
+  alert(`Subscribed with ${v}!`);document.getElementById('nlEmail').value='';
+}
+
+/* ACTIVITY FEED */
+const fakeNames=['0xAlpha','CryptoSage','NFTWanderer','PixelKing','ArtCollector','0xZen','MetaVault'];
+const msgFns=[(n,p)=>`<strong>${n}</strong> purchased for <span class="a-price">${p} ETH</span>`,(n,p)=>`<strong>${n}</strong> bid <span class="a-price">${p} ETH</span>`,(n)=>`<strong>${n}</strong> listed a new artwork`];
+function startActivityFeed(){
+  function show(){
+    const feed=document.getElementById('actFeed');if(!feed)return;
+    const n=fakeNames[Math.floor(Math.random()*fakeNames.length)];
+    const p=(Math.random()*10+.5).toFixed(2);
+    const fn=msgFns[Math.floor(Math.random()*msgFns.length)];
+    const init=n.replace('0x','')[0].toUpperCase();
+    const t=document.createElement('div');t.className='a-toast';
+    t.innerHTML=`<div class="a-av">${init}</div><div class="a-text">${fn(n,p)}<br><span style="font-size:.68rem;color:var(--tx3)">${Math.floor(Math.random()*59)+1}s ago</span></div>`;
+    feed.appendChild(t);
+    setTimeout(()=>{t.style.opacity='0';t.style.transition='opacity .4s';setTimeout(()=>t.remove(),400);},4600);
+    if(feed.children.length>3)feed.firstChild.remove();
+    setTimeout(show,Math.random()*6000+4000);
+  }
+  setTimeout(show,3500);
+}
+
+/* SCROLL UTIL */
+function scrollTo(sel){
+  const el=document.querySelector(sel);
+  if(el)el.scrollIntoView({behavior:'smooth',block:'start'});
+}
+
+/* NAV scroll effect */
+window.addEventListener('scroll',()=>{
+  const nav=document.getElementById('nav');
+  nav.style.background=window.scrollY>50?'rgba(6,8,15,.92)':'rgba(6,8,15,.7)';
+});
+
+/* ─── INIT ─── */
+loadData();
+startActivityFeed();
+buildTicker();
+</script>
+</body>
+</html>
